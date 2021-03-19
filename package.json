@@ -1,6 +1,6 @@
 {
   "name": "il-consigliere",
-  "version": "1.0.1",
+  "version": "1.0.0",
   "description": "for the Computer Engineering Concil",
   "main": "index.js",
   "scripts": {
