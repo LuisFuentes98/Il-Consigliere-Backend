@@ -1,0 +1,137 @@
+.consejo-card {
+    width: inherit;
+}
+
+.registro-container {
+    width: 50%;
+}
+
+.punto-container {
+    height: inherit;
+    overflow: auto;
+}
+
+.punto-consejo {
+    height: 230px;
+    overflow: auto;
+}
+
+.convocados {
+    height: 220px;
+    overflow: auto;
+}
+
+.punto-space {
+    height: 32vh;
+    overflow: auto;
+}
+
+.punto-nonspace {
+    height: 450px;
+    overflow: auto;
+}
+
+.todo-registro {
+    display: flex;
+}
+
+.consejo-button {
+    width: 35vw;
+}
+
+.editar-button {
+    width: 25vw;
+}
+
+.izq {
+    margin-right: 16px;
+}
+
+.der {
+    margin-left: 16px;
+}
+
+.solicitud-container {
+    height: 100px;
+    overflow: auto;
+}
+
+.convocar-button {
+    width: 18vw;
+    height: 35px;
+}
+
+.solicitud-button {
+    height: 20px;
+}
+
+.convocado-div {
+    height: 30vh;
+    overflow: auto;
+}
+
+.punto-container-votacion {
+    height: auto;
+}
+
+.my-input {
+    height: 20px;
+}
+
+.ubicar-salida {
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+.punto-editable {
+    height: 250px;
+    overflow: auto;
+}
+
+.punto-nuevo {
+    height: 225px;
+    overflow: auto;
+}
+
+.punto-votacion {
+    height: 400px;
+    overflow: auto;
+}
+
+.votacion-input {
+    width: 110px;
+}
+
+@media only screen and (max-width: 900px) {
+    .solicitud-button {
+        height: auto;
+    }
+}
+
+@media only screen and (max-width: 760px) {
+    .todo-registro {
+        display: block;
+    }
+    .registro-container {
+        width: 100%;
+    }
+    .consejo-button {
+        width: auto;
+    }
+    .izq {
+        margin: 0;
+    }
+    .der {
+        margin: 0;
+    }
+}
+
+@media only screen and (max-width: 540px) {
+    .editar-button {
+        width: auto;
+    }
+    .convocar-button {
+        width: auto;
+    }
+}

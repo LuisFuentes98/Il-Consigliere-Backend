@@ -7,7 +7,7 @@ const port = process.env.PORT || 5000;
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static(path.join(__dirname, '../build')));
+app.use(express.static(path.join(__dirname, '../frontend/build')));
 
 //RUTAS
 const userRouter = require('./routes/UserRoutes');
@@ -35,7 +35,7 @@ app.use('/votacion', votingRouter);
 
 //RUTAS DE REACT
 app.get('/*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../build', 'index.html'));
+  res.sendFile(path.join(__dirname, '../frontend/build', 'index.html'));
 });
 
 app.listen(port, () => {

@@ -1,0 +1,29 @@
+.my-row {
+    height: 80vh;
+}
+
+.my-div {
+    width: 95%;
+    padding: 0.75rem;
+    vertical-align: top;
+}
+
+.my-email {
+    width: 90%;
+}
+
+.my-email2 {
+    width: 90%;
+    text-align: center;
+}
+
+.email-container {
+    height: 60vh;
+    overflow: auto;
+}
+
+@media only screen and (max-width: 768px) {
+    .especial {
+        margin-top: 40px;
+    }
+}
