@@ -124,7 +124,7 @@ class UserController {
             `Los administradores del Consejo de Ingeniería en Computación del 
             Campus Tecnológico Local de San José han solicitado que seas un participante 
             en el Consejo de Unidad Desconcentrada, por favor haz click en la siguiente dirección 
-            y llena los datos solicitados:\n\n${process.env.VERIFICATION_LINK_URL}${token}\n
+            y llena los datos solicitados:\n\n${process.env.PAGE_LINK}/gUsuarios/registro/${token}\n
             \nSe le recuerda que esta dirección expirará en 3 horas.
             \n\nSaludos,\nConsejo de Ingeniería en Computación.`
         };
