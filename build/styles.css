@@ -84,7 +84,13 @@ h4 {
     width: 180px !important;
 }
 
+.my-success {
+    cursor: pointer;
+    color: rgb(90, 180, 0);
+}
+
 .my-danger {
+    cursor: pointer;
     color: rgb(187, 0, 37);
 }
 
