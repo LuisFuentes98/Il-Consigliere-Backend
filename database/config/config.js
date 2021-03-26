@@ -20,7 +20,10 @@ module.exports = {
     "dialect": "postgres",
     "dialectOptions": {
       "native": true,
-      "ssl": true
+      "ssl": {
+        "require": true,
+        "rejectUnauthorized": false
+      }
     }
   }
 }
