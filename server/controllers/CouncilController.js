@@ -29,7 +29,7 @@ class CouncilController {
   static async getCouncilAttendant(req, res) {
     try {
       await db.sequelize.transaction(async t => {
-        const council = await db.sequelize.query(`SELECT "Consejo"."institucion", "Consejo"."carrera", "Consejo"."campus", "Consejo"."nombre_consejo", "Consejo"."consecutivo", "Consejo"."lugar", "Consejo"."fecha", "Consejo"."hora", "Consejo"."id_tipo_sesion", "Convocado"."limite_solicitud" FROM public."Consejo" INNER JOIN public."Convocado" ON "Consejo"."consecutivo" = "Convocado"."consecutivo" WHERE "Convocado"."cedula" = '${req.params.cedula}' AND "Consejo"."consecutivo" = '${req.params.consecutivo}'`);
+        const council = await db.sequelize.query(`SELECT "Consejo"."institucion", "Consejo"."carrera", "Consejo"."campus", "Consejo"."nombre_consejo", "Consejo"."consecutivo", "Consejo"."lugar", "Consejo"."fecha", "Consejo"."hora", "Consejo"."id_tipo_sesion" FROM public."Consejo" INNER JOIN public."Convocado" ON "Consejo"."consecutivo" = "Convocado"."consecutivo" WHERE "Convocado"."cedula" = '${req.params.cedula}' AND "Consejo"."consecutivo" = '${req.params.consecutivo}'`);
         if (council[0].length > 0) {
           res.json({
             success: true,
@@ -98,7 +98,7 @@ class CouncilController {
   static async getCouncilsBeforeByUser(req, res) {
     try {
       await db.sequelize.transaction(async t => {
-        const councils = await db.sequelize.query(`SELECT "Consejo"."institucion", "Consejo"."carrera", "Consejo"."campus", "Consejo"."nombre_consejo", "Consejo"."consecutivo", "Consejo"."lugar", "Consejo"."fecha", "Consejo"."hora", "Consejo"."id_tipo_sesion" FROM public."Consejo" INNER JOIN public."Convocado" ON "Consejo"."consecutivo" = "Convocado"."consecutivo" WHERE "Convocado"."cedula" = '${req.params.cedula}' AND "Consejo"."fecha" < '${req.params.fecha}' ORDER BY "Consejo"."fecha" DESC, "Consejo"."hora" ASC, "Consejo"."consecutivo" ASC LIMIT 6`);
+        const councils = await db.sequelize.query(`SELECT "Consejo"."institucion", "Consejo"."carrera", "Consejo"."campus", "Consejo"."nombre_consejo", "Consejo"."consecutivo", "Consejo"."lugar", "Consejo"."fecha", "Consejo"."hora", "Consejo"."limite_solicitud", "Consejo"."id_tipo_sesion" FROM public."Consejo" INNER JOIN public."Convocado" ON "Consejo"."consecutivo" = "Convocado"."consecutivo" WHERE "Convocado"."cedula" = '${req.params.cedula}' AND "Consejo"."fecha" < '${req.params.fecha}' ORDER BY "Consejo"."fecha" DESC, "Consejo"."hora" ASC, "Consejo"."consecutivo" ASC LIMIT 6`);
         if (councils[0].length > 0) {
           res.json({
             success: true,
@@ -119,12 +119,12 @@ class CouncilController {
   }
 
   static async store(req, res) {
-    const { consecutivo, id_tipo_sesion, fecha, hora, lugar, puntos, cedula, id_estado_punto } = req.body;
+    const { consecutivo, id_tipo_sesion, fecha, hora, limite_solicitud, lugar, puntos, cedula, id_estado_punto } = req.body;
     try {
       await db.sequelize.transaction(async t => {
         await db.Consejo.create({
           consecutivo: consecutivo, id_tipo_sesion: id_tipo_sesion,
-          fecha: fecha, hora: hora, lugar: lugar, editable: 1
+          fecha: fecha, hora: hora, limite_solicitud: limite_solicitud, lugar: lugar, editable: 1
         });
         for (let i = 0; i < puntos.length; i++) {
           await db.Punto.create({
@@ -186,12 +186,12 @@ class CouncilController {
   }
 
   static async update(req, res) {
-    const { id_tipo_sesion, fecha, hora, lugar } = req.body;
+    const { id_tipo_sesion, fecha, hora, limite_solicitud, lugar } = req.body;
     try {
       await db.sequelize.transaction(async t => {
         await db.Consejo.update({
           id_tipo_sesion: id_tipo_sesion, lugar: lugar,
-          fecha: fecha, hora: hora
+          fecha: fecha, hora: hora, limite_solicitud: limite_solicitud
         }, { where: { consecutivo: req.params.consecutivo } });
         res.json({
           success: true
