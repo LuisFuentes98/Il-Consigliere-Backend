@@ -78,6 +78,9 @@ export default class Acceso extends Component {
   }
 
   render() {
+    if(this.state.redirect){
+      console.log("Redireccionando");
+    }
     return this.state.redirect ? <Redirect to='/consejos' /> :
       <>
         <Navegacion />
