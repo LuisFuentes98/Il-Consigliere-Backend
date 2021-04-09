@@ -1,5 +1,3 @@
-import app from '../server/server';
-
 let chai = require('chai');
 let chaiHttp = require('chai-http');
 var assert = require('assert');
