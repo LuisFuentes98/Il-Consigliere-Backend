@@ -103,7 +103,13 @@ class AttendantController {
             to: `${toList}`,
             subject: `Convocatoria al ${info.nombre_consejo} ${info.consecutivo}`,
             text:
-              `Los administradores del Consejo de Ingeniería en Computación del Campus Tecnológico Local de San José le han convocado a la sesión ${info.id_tipo_sesion === 1 ? 'ordinaria' : info.id_tipo_sesion === 2 ? 'extraordinaria' : 'de Consulta Formal'} ${info.consecutivo}. Información de la Convocatoria:\n\n${info.institucion}\n${info.carrera}\n${info.campus}\n${info.nombre_consejo}\nLugar: ${info.lugar}\nFecha: ${info.fecha}\nHora: ${info.hora}\n\nPara visualizar los puntos de agenda, las personas convocadas y realizar solicitudes, por favor inicie sesión en ${process.env.PAGE_LINK}/acceso`
+              `Los administradores del Consejo de Ingeniería en Computación del Campus 
+              Tecnológico Local de San José le han convocado a la sesión 
+              ${info.id_tipo_sesion === 1 ? 'ordinaria' : info.id_tipo_sesion === 2 ? 'extraordinaria' : 'de Consulta Formal'} 
+              ${info.consecutivo}. Información de la Convocatoria:\n\n${info.institucion}
+              \n${info.carrera}\n${info.campus}\n${info.nombre_consejo}\nLugar: ${info.lugar}
+              \nFecha: ${info.fecha}\nHora: ${info.hora}\n\nPara visualizar los puntos de agenda, 
+              las personas convocadas y realizar solicitudes, por favor inicie sesión en ${process.env.PAGE_LINK}/acceso`
           };
           transporter.sendMail(mailOptions, (err, resp) => {
             if (err) {
