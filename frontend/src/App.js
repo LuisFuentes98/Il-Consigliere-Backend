@@ -35,6 +35,7 @@ function App() {
         <ProtectedRoute path='/gUsuarios' exact role={Role.UserModifier} component={ListaUsuarios} />
         <ProtectedRoute path='/consejos/:consecutivo' component={Consejo} />
         <ProtectedRoute path='/consejos' component={Consejos} />
+        <ProtectedRoute path='/proximosconsejos/:consecutivo' component={Consejo} />
         <ProtectedRoute path='/proximosconsejos' component={VisualizarConsejosUsuario} />
         <ProtectedRoute path='/cuenta' component={Cuenta} />
         <Route path='/acceso' component={Acceso} />

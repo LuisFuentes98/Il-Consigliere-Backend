@@ -11,6 +11,7 @@ export default class SolicitudAgendaConvocado extends Component {
       solicitudes: [],
       punto: '',
       cedula: auth.getInfo().cedula,
+      orden: 0,
       redirect: false
     }
 
@@ -31,7 +32,8 @@ export default class SolicitudAgendaConvocado extends Component {
             .then(res => {
               if (res.data.success) {
                 this.setState({
-                  solicitudes: res.data.discussions
+                  solicitudes: res.data.discussions,
+                  orden: res.data.discussions.length
                 });
               } else {
                 this.setState({
@@ -64,9 +66,11 @@ export default class SolicitudAgendaConvocado extends Component {
           if (value) {
             const info = {
               id_tipo_punto: 2,
+              id_estado_punto: 2,
               asunto: this.state.punto,
               cedula: this.state.cedula,
-              consecutivo: this.state.consecutivo
+              consecutivo: this.state.consecutivo,
+              orden: this.state.orden
             };
             axios.post('/punto', info)
               .then(res => {

@@ -4,7 +4,6 @@ import Navegacion from '../Navegacion/Navegacion';
 import { Link } from 'react-router-dom';
 import { myAlert } from '../../helpers/alert';
 import auth from '../../helpers/auth';
-import { requestDay } from '../../helpers/dates';
 import './Consejos.css';
 
 export default class Convocar extends Component {
@@ -136,7 +135,7 @@ export default class Convocar extends Component {
             if (convoque.length > 0) {
               this.button.current.setAttribute('disabled', 'disabled');
               this.button.current.style.cursor = 'progress';
-              const res = await axios.post('/convocado', { convocados: convoque, consecutivo: this.state.consecutivo, limite_solicitud: requestDay() });
+              const res = await axios.post('/convocado', { convocados: convoque, consecutivo: this.state.consecutivo});
               if (res.data.success) {
                 this.button.current.removeAttribute('disabled', 'disabled');
                 this.button.current.style.cursor = 'default';

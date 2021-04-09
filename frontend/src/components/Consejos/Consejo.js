@@ -31,7 +31,7 @@ export default class Consejos extends Component {
     auth.verifyToken()
       .then(value => {
         if (value) {
-          axios.get(`/consejo/convocado/${this.state.consecutivo}/${this.state.cedula}`)
+          axios.get(`/consejo/${this.state.consecutivo}`)
             .then(res => {
               if (res.data.success) {
                 this.setState({

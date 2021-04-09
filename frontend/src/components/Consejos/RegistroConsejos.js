@@ -15,6 +15,7 @@ export default class RegistroConsejos extends Component {
       lugar: '',
       fecha: '',
       hora: '',
+      limite_solicitud: '',
       hoy: getTodaysDate(),
       tipoSesion: [],
       tipoPunto: [],
@@ -135,6 +136,7 @@ export default class RegistroConsejos extends Component {
                   lugar: this.state.lugar,
                   fecha: this.state.fecha,
                   hora: this.state.hora,
+                  limite_solicitud: this.state.limite_solicitud,
                   id_tipo_sesion: this.state.sesionSeleccionada,
                   puntos: this.state.puntos,
                   cedula: auth.getInfo().cedula,
@@ -267,6 +269,11 @@ export default class RegistroConsejos extends Component {
                         <input type="time" required name="hora" min='07:00' max='20:00' step='900' className="form-control"
                           onChange={this.handleInputChange} value={this.state.hora} />
                         <p className='my-muted'>*Hora en la que se llevará a cabo el consejo.</p>
+                      </div>
+                      <div className="form-group">
+                        <input type="date" required name="limite_solicitud" min={this.state.hoy} className="form-control"
+                          onChange={this.handleInputChange} value={this.state.limite_solicitud} />
+                        <p className="my-muted">*Fecha límite para el envío de sugerencias de puntos de consejo.</p>
                       </div>
                     </div>
                     <div className='registro-container der'>

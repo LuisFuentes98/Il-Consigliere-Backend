@@ -70,12 +70,54 @@ export default class SolicitudAgenda extends Component {
     this.setState(prevState => ({ solicitudes: prevState.solicitudes.set(id_punto, solicitud) }));
   }
 
+  disableEditable(e, id_punto) {
+    e.preventDefault();
+    let solicitud = this.state.solicitudes.get(id_punto);
+    solicitud.editable = false;
+    this.setState(prevState => ({ solicitudes: prevState.solicitudes.set(id_punto, solicitud) }));
+  }
+
   acceptDiscussion(e, id_punto) {
     e.preventDefault();
     auth.verifyToken()
       .then(value => {
         if (value) {
-          axios.put(`/punto/${id_punto}`, { id_tipo_punto: 1, asunto: this.state.solicitudes.get(id_punto).asunto })
+          axios.get(`/punto/aprobado/${this.state.consecutivo}`)
+            .then(response => {
+              let orden = 0;
+              if(response.data.succes){
+                orden = response.data.discussions.length;
+              }
+              axios.put(`/punto/${id_punto}`, { id_estado_punto: 1, asunto: this.state.solicitudes.get(id_punto).asunto, orden: orden })
+                  .then(res => {
+                    if (res.data.success) {
+                      let solicitudes = this.state.solicitudes;
+                      solicitudes.delete(id_punto);
+                      this.setState({
+                        solicitudes: solicitudes
+                      });
+                      this.props.updateParent();
+                    }
+                })
+                .catch((err) => console.log(err));
+            })
+            .catch((err) => console.log(err));
+        } else {
+          this.setState({
+            redirect: true
+          })
+          auth.logOut();
+        }
+      })
+      .catch((err) => console.log(err));
+  }
+
+  deleteDiscussion(e, id_punto) {
+    e.preventDefault();
+    auth.verifyToken()
+      .then(value => {
+        if (value) {
+          axios.delete(`/punto/${id_punto}`)
             .then(res => {
               if (res.data.success) {
                 let solicitudes = this.state.solicitudes;
@@ -107,6 +149,7 @@ export default class SolicitudAgenda extends Component {
               <p className='m-0 text-justify'>{value.nombre + ' ' + value.apellido}:</p>
               <textarea name={value.id_punto} className="form-control" onChange={this.handleInputChange} value={value.asunto} style={{ width: 'inherited' }} />
             </div>
+            <button className="fas fa-edit my-disabled fa-lg ml-4 my-button" type="button" onClick={(e) => this.disableEditable(e, value.id_punto)} />
             <button className="far fa-check-circle my-icon fa-lg mx-2 my-button" type="button" onClick={(e) => this.acceptDiscussion(e, value.id_punto)} />
           </div>
         );
@@ -117,6 +160,7 @@ export default class SolicitudAgenda extends Component {
             <div className='d-flex justify-content-between align-items-center'>
               <button className="fas fa-edit my-icon fa-lg ml-4 my-button" type="button" onClick={(e) => this.makeEditable(e, value.id_punto)} />
               <button className="far fa-check-circle my-icon fa-lg mx-2 my-button" type="button" onClick={(e) => this.acceptDiscussion(e, value.id_punto)} />
+              <button className="fas fa-trash-alt my-icon fa-lg mx-1 my-button" type="button" onClick={(e) => this.deleteDiscussion(e, value.id_punto)}/>
             </div>
           </div>
         );
