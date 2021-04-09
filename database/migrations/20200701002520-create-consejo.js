@@ -40,6 +40,10 @@ module.exports = {
         allowNull: false,
         type: Sequelize.TIME
       },
+      limite_solicitud: {
+        allowNull: false,
+        type: Sequelize.DATEONLY
+      },
       lugar: {
         allowNull: false,
         type: Sequelize.STRING
