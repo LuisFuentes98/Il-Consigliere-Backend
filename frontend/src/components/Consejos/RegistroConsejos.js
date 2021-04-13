@@ -131,26 +131,30 @@ export default class RegistroConsejos extends Component {
               if (resp.data.success) {
                 myAlert('Atención', `El número de consecutivo: ${this.state.consecutivo} ya existe en el sistema.`, 'warning');
               } else {
-                const consejo = {
-                  consecutivo: this.state.consecutivo,
-                  lugar: this.state.lugar,
-                  fecha: this.state.fecha,
-                  hora: this.state.hora,
-                  limite_solicitud: this.state.limite_solicitud,
-                  id_tipo_sesion: this.state.sesionSeleccionada,
-                  puntos: this.state.puntos,
-                  cedula: auth.getInfo().cedula,
-                  id_estado_punto: 1
-                };
-                axios.post('/consejo', consejo)
-                  .then(res => {
-                    if (res.data.success) {
-                      this.props.history.push('/gConsejos');
-                    } else {
-                      myAlert('Oh no!', 'Error interno del servidor.', 'error');
-                    }
-                  })
-                  .catch((err) => console.log(err));
+                if(this.state.fecha <= this.state.limite_solicitud){
+                  myAlert('Atención', `La fecha limite de solicitudes no puede ser posterior o igual a la fecha de realización consejo.`, 'warning');
+                } else {
+                  const consejo = {
+                    consecutivo: this.state.consecutivo,
+                    lugar: this.state.lugar,
+                    fecha: this.state.fecha,
+                    hora: this.state.hora,
+                    limite_solicitud: this.state.limite_solicitud,
+                    id_tipo_sesion: this.state.sesionSeleccionada,
+                    puntos: this.state.puntos,
+                    cedula: auth.getInfo().cedula,
+                    id_estado_punto: 1
+                  };
+                  axios.post('/consejo', consejo)
+                    .then(res => {
+                      if (res.data.success) {
+                        this.props.history.push('/gConsejos');
+                      } else {
+                        myAlert('Oh no!', 'Error interno del servidor.', 'error');
+                      }
+                    })
+                    .catch((err) => console.log(err));
+                }
               }
             })
             .catch((err) => console.log(err));

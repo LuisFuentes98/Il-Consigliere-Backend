@@ -5,6 +5,7 @@ import AgendaOficial from './AgendaOficial';
 import axios from 'axios';
 import auth from '../../helpers/auth';
 import { getTodaysDate } from '../../helpers/dates';
+import { myAlert } from '../../helpers/alert';
 import { Loading } from '../../helpers/Loading';
 import DefaultComponent from '../../helpers/DefaultComponent';
 import './Consejos.css';
@@ -86,20 +87,24 @@ export default class EditarConsejo extends Component {
     auth.verifyToken()
       .then(value => {
         if (value) {
-          const consejo = {
-            id_tipo_sesion: this.state.sesionSeleccionada,
-            lugar: this.state.lugar,
-            fecha: this.state.fecha,
-            hora: this.state.hora,
-            limite_solicitud: this.state.limite_solicitud
+          if(this.state.fecha <= this.state.limite_solicitud){
+            myAlert('Atención', `La fecha limite de solicitudes no puede ser posterior o igual a la fecha de realización consejo.`, 'warning');
+          } else {
+            const consejo = {
+              id_tipo_sesion: this.state.sesionSeleccionada,
+              lugar: this.state.lugar,
+              fecha: this.state.fecha,
+              hora: this.state.hora,
+              limite_solicitud: this.state.limite_solicitud
+            }
+            axios.put(`/consejo/${this.state.consecutivo}`, consejo)
+              .then(res => {
+                if (res.data.success) {
+                  this.props.history.push('/gConsejos');
+                }
+              })
+              .catch((err) => console.log(err));
           }
-          axios.put(`/consejo/${this.state.consecutivo}`, consejo)
-            .then(res => {
-              if (res.data.success) {
-                this.props.history.push('/gConsejos');
-              }
-            })
-            .catch((err) => console.log(err));
         } else {
           this.setState({
             redirect: true
