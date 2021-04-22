@@ -104,15 +104,16 @@ export default class VisualizarConsejos extends Component {
           <div className="card border-primary mb-3">
             <div className="card-body p-2">
               <div className='d-flex justify-content-between align-items-center'>
-                <p className="card-title m-0">{consejo.institucion}</p>
+                <p className="card-title m-0">{consejo.consecutivo}</p>
                 <div className='d-flex justify-content-between align-items-center'>
                   <Link to={`/gConsejos/participantes/${consejo.consecutivo}`}><i className="fas fa-user-cog fa-lg ml-2" style={{ color: "navy" }}></i></Link>
                   <Link to={`/gConsejos/editar/${consejo.consecutivo}`}><i className="fas fa-edit fa-lg ml-2" style={{ color: "navy" }}></i></Link>
                   <i className="fas fa-trash-alt my-icon fa-lg ml-2" onClick={(e) => this.deleteCouncil(e, consejo.consecutivo)} />
                 </div>
               </div>
-              <p className='m-0'>{consejo.carrera}</p>
+              <p className='m-0'>{consejo.institucion}</p>
               <p className='m-0'>{consejo.campus}</p>
+              <p className='m-0'>{consejo.carrera}</p>
               <p className='m-0'>{consejo.nombre_consejo}</p>
               <p className='m-0'>Sesión {consejo.id_tipo_sesion === 1 ? 'Ordinaria' : consejo.id_tipo_sesion === 2 ? 'Extraordinaria' : 'Consulta Formal'} {consejo.consecutivo}</p>
               <p className='m-0'>Lugar: {consejo.lugar}</p>
@@ -135,13 +136,14 @@ export default class VisualizarConsejos extends Component {
           <div className="card border-primary mb-3">
             <div className="card-body p-2">
               <div className='d-flex justify-content-between align-items-center'>
-                <p className="card-title m-0">{consejo.institucion}</p>
+                <p className="card-title m-0">{consejo.consecutivo}</p>
                 <div className='d-flex justify-content-between align-items-center'>
                   <Link to={`/gConsejos/${consejo.consecutivo}`}><i className="far fa-eye fa-lg ml-2" style={{ color: "navy" }}></i></Link>
                 </div>
               </div>
-              <p className='m-0'>{consejo.carrera}</p>
+              <p className='m-0'>{consejo.institucion}</p>
               <p className='m-0'>{consejo.campus}</p>
+              <p className='m-0'>{consejo.carrera}</p>
               <p className='m-0'>{consejo.nombre_consejo}</p>
               <p className='m-0'>Sesión {consejo.id_tipo_sesion === 1 ? 'Ordinaria' : consejo.id_tipo_sesion === 2 ? 'Extraordinaria' : 'Consulta Formal'} {consejo.consecutivo}</p>
               <p className='m-0'>Lugar: {consejo.lugar}</p>

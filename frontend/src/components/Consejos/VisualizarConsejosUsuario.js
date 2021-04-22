@@ -73,8 +73,8 @@ export default class VisualizarConsejosUsuario extends Component {
                 <Link to={`/proximosconsejos/${consecutivo}`}><i className="far fa-eye fa-lg ml-2" style={{ color: "navy" }}></i></Link>
               </div>
               <p className='m-0'>{institucion}</p>
-              <p className='m-0'>{carrera}</p>
               <p className='m-0'>{campus}</p>
+              <p className='m-0'>{carrera}</p>
               <p className='m-0'>{nombre_consejo}</p>
               <p className='m-0'>Sesión {id_tipo_sesion === 1 ? 'Ordinaria' : id_tipo_sesion === 2 ? 'Extraordinaria' : 'Consulta Formal'} </p>
               <p className='m-0'>Lugar: {lugar}</p>
