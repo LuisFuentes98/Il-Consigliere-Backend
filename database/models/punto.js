@@ -12,6 +12,7 @@ module.exports = (sequelize, DataTypes) => {
     asunto: { type: DataTypes.TEXT, allowNull: false },
     orden: { type: DataTypes.INTEGER, allowNull: false },
     cedula: { type: DataTypes.STRING, allowNull: false },
+    comentario: { type: DataTypes.STRING, allowNull: true },
     id_tipo_punto: {
       type: DataTypes.INTEGER, allowNull: false, references: {
         model: {

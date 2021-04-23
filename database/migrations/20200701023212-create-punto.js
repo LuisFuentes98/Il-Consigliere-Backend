@@ -29,6 +29,10 @@ module.exports = {
         allowNull: false,
         type: Sequelize.STRING
       },
+      comentario: {
+        allowNull: true,
+        type: Sequelize.STRING
+      },
       id_tipo_punto: {
         allowNull: false,
         type: Sequelize.INTEGER,
