@@ -15,6 +15,7 @@ export default class AgendaOficial extends Component {
       puntoSeleccionado: 1,
       ordenar: false,
       orden: 0,
+      comentario: '',
       redirect: false
     }
     this.handleInputChange = this.handleInputChange.bind(this);
@@ -174,6 +175,7 @@ export default class AgendaOficial extends Component {
           <div>
             <li className='text-justify m-0'>{punto.asunto}</li>
             {punto.id_tipo_punto === 1 && <p className='text-justify m-0 my-muted'>*Este punto es votativo</p>}
+            {punto.comentario && <p className='text-justify m-0 my-muted'>Comentario: {punto.comentario}</p>}
           </div>
           {this.state.ordenar ?
             <div className='d-flex'>

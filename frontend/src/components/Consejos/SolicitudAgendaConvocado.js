@@ -12,6 +12,7 @@ export default class SolicitudAgendaConvocado extends Component {
       punto: '',
       cedula: auth.getInfo().cedula,
       orden: 0,
+      comentario: '',
       redirect: false
     }
 

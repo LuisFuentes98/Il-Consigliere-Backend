@@ -68,7 +68,12 @@ export default class Consejos extends Component {
   getDiscussions() {
     const discussions = [];
     for (let i = 0; i < this.state.aprobados.length; i++) {
-      discussions.push(<li className='m-0 text-justify' key={i}>{this.state.aprobados[i].asunto}</li>);
+      discussions.push(
+        <div>
+          <li className='m-0 text-justify' key={i}>{this.state.aprobados[i].asunto}</li>
+          {this.state.aprobados[i].comentario && <p className='text-justify m-0 my-muted'>Comentario: {this.state.aprobados[i].comentario}</p>}
+        </div>
+        );
     }
     return discussions;
   }

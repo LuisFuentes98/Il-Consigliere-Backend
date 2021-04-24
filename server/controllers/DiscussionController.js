@@ -5,7 +5,7 @@ class DiscussionController {
   static async getDiscussions(req, res) {
     try {
       await db.sequelize.transaction(async t => {
-        const discussions = await db.Punto.findAll({ attributes: ['id_punto', 'asunto', 'orden', 'id_tipo_punto'], where: { consecutivo: req.params.consecutivo, id_estado_punto: 1 }, order: [['orden', 'ASC']] });
+        const discussions = await db.Punto.findAll({ attributes: ['id_punto', 'asunto', 'orden', 'id_tipo_punto', 'comentario'], where: { consecutivo: req.params.consecutivo, id_estado_punto: 1 }, order: [['orden', 'ASC']] });
         if (discussions.length > 0) {
           res.json({
             success: true,
@@ -74,7 +74,7 @@ class DiscussionController {
   static async getVotingDiscussions(req, res) {
     try {
       await db.sequelize.transaction(async t => {
-        const discussions = await db.sequelize.query(`SELECT "Punto"."id_punto", "Punto"."asunto", "Punto"."id_tipo_punto", "Votacion"."favor", "Votacion"."contra", "Votacion"."abstencion" FROM public."Punto" LEFT JOIN public."Votacion" ON "Punto"."id_punto" = "Votacion"."id_punto" WHERE "Punto"."consecutivo" = '${req.params.consecutivo}' AND "Punto"."id_estado_punto" = 1 ORDER BY "Punto"."orden"`);
+        const discussions = await db.sequelize.query(`SELECT "Punto"."id_punto", "Punto"."asunto", "Punto"."comentario", "Punto"."id_tipo_punto", "Votacion"."favor", "Votacion"."contra", "Votacion"."abstencion" FROM public."Punto" LEFT JOIN public."Votacion" ON "Punto"."id_punto" = "Votacion"."id_punto" WHERE "Punto"."consecutivo" = '${req.params.consecutivo}' AND "Punto"."id_estado_punto" = 1 ORDER BY "Punto"."orden"`);
         if (discussions[0].length > 0) {
           res.json({
             success: true,

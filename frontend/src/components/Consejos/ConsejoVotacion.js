@@ -169,11 +169,15 @@ export default class Consejos extends Component {
   getDiscussion(discussion, i) {
     if (!this.state.consejo.editable) {
       if (discussion.id_tipo_punto === 2) {
-        return <li className='m-0 text-justify' key={i}>{discussion.asunto}</li>;
+        return <div>
+                  <li className='m-0 text-justify' key={i}>{discussion.asunto}</li>;
+                  {discussion.comentario && <p className='text-justify m-0 my-muted'>Comentario: {discussion.comentario}</p>}
+                </div>
       }
       return (
         <div className='my-2' key={i}>
           <li className='m-0 text-justify'>{discussion.asunto}</li>
+          {discussion.comentario && <p className='text-justify m-0 my-muted'>Comentario: {discussion.comentario}</p>}
           <p className='m-0'>Resultados de votaciones</p>
           <div className='d-flex align-items-center'>
             <p className='m-0'>A favor: {discussion.favor}</p>
@@ -184,12 +188,16 @@ export default class Consejos extends Component {
       );
     }
     if (discussion.id_tipo_punto === 2) {
-      return <li className='m-0 text-justify' key={i}>{discussion.asunto}</li>;
+      return <div>
+                <li className='m-0 text-justify' key={i}>{discussion.asunto}</li>
+                {discussion.comentario && <p className='text-justify m-0 my-muted'>Comentario: {discussion.comentario}</p>}
+              </div>
     }
     if (discussion.editable) {
       return (
         <div className='my-2' key={i}>
           <li className='m-0 text-justify'>{discussion.asunto}</li>
+          {discussion.comentario && <p className='text-justify m-0 my-muted'>Comentario: {discussion.comentario}</p>}
           <div className='d-flex justify-content-between align-items-center'>
             <div className='d-flex align-items-center'>
               <input type="text" required maxLength="4" name="favor"
@@ -211,6 +219,7 @@ export default class Consejos extends Component {
       return (
         <div className='my-2' key={i}>
           <li className='m-0 text-justify'>{discussion.asunto}</li>
+          {discussion.comentario && <p className='text-justify m-0 my-muted'>Comentario: {discussion.comentario}</p>}
           <p className='m-0'>Resultados de votaciones</p>
           <div className='d-flex justify-content-between align-items-center'>
             <div className='d-flex align-items-center'>
@@ -226,6 +235,7 @@ export default class Consejos extends Component {
     return (
       <div className='d-flex justify-content-between align-items-center my-2' key={i}>
         <li className='m-0 text-justify'>{discussion.asunto}</li>
+        {discussion.comentario && <p className='text-justify m-0 my-muted'>Comentario: {discussion.comentario}</p>}
         <button className="fas fa-vote-yea my-icon fa-lg mx-1 my-button" type="button" onClick={(e) => this.makeEditable(e, i)} />
       </div>
     );
