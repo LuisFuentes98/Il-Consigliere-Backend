@@ -25,6 +25,7 @@ export default class EditarConsejo extends Component {
       tipoSesion: [],
       sesionSeleccionada: 1,
       encontrado: true,
+      finalizado: false,
       redirect: false
     }
 
@@ -75,7 +76,7 @@ export default class EditarConsejo extends Component {
   }
 
   handleInputChange(e) {
-    let value = e.target.value;
+    let value = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
     let name = e.target.name;
     this.setState({
       [name]: value
@@ -170,6 +171,13 @@ export default class EditarConsejo extends Component {
                         <input type="date" required name="limite_solicitud" min={this.state.hoy} className="form-control"
                           onChange={this.handleInputChange} value={this.state.limite_solicitud} />
                         <p className="my-muted">*Fecha límite para el envío de sugerencias de puntos de consejo.</p>
+                      </div>
+                      <div className="form-group">
+                        <div className="custom-control custom-checkbox">
+                          <input type="checkbox" className="custom-control-input" name="finalizado"
+                          checked={this.state.finalizado} onChange={this.handleInputChange} />
+                          <p className="custom-control-label" htmlFor='default'>Marcar consejo como finalizado</p>
+                        </div>
                       </div>
                     </div>
                     <div className='registro-container der'>
