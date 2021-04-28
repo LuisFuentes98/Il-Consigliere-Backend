@@ -11,6 +11,7 @@ export default class AgendaOficial extends Component {
       consecutivo: this.props.consecutivo,
       punto: '',
       puntos: [],
+      archivosVisibles: [],
       tipoPunto: [],
       puntoSeleccionado: 1,
       ordenar: false,
@@ -46,7 +47,12 @@ export default class AgendaOficial extends Component {
     axios.get(`/punto/aprobado/${this.state.consecutivo}`)
       .then(resp => {
         if (resp.data.success) {
+          let archivosVisibles = [];
+          for(let i=0; i<resp.data.discussions.length; i++){
+            archivosVisibles.push(false);
+          }
           this.setState({
+            archivosVisibles: archivosVisibles,
             puntos: resp.data.discussions,
             orden: resp.data.discussions.length
           });
@@ -77,7 +83,10 @@ export default class AgendaOficial extends Component {
               .then(res => {
                 if (res.data.success) {
                   this.getDiscussionsFromBD();
+                  let archivosVisibles = this.state.archivosVisibles;
+                  archivosVisibles.push(false);
                   this.setState({
+                    archivosVisibles: archivosVisibles,
                     punto: '',
                     orden: this.state.orden + 1
                   });
@@ -171,24 +180,62 @@ export default class AgendaOficial extends Component {
     for (let i = 0; i < this.state.puntos.length; i++) {
       let punto = this.state.puntos[i];
       discussions.push(
-        <div className='d-flex justify-content-between align-items-center my-2' key={i}>
-          <div>
-            <li className='text-justify m-0'>{punto.asunto}</li>
-            {punto.id_tipo_punto === 1 && <p className='text-justify m-0 my-muted'>*Este punto es votativo</p>}
-            {punto.comentario && <p className='text-justify m-0 my-muted'>Comentario: {punto.comentario}</p>}
-          </div>
-          {this.state.ordenar ?
-            <div className='d-flex'>
-              {i !== 0 && <button className="far fa-caret-square-up my-icon fa-lg mx-1 my-button" type="button" onClick={(e) => this.up(e, i)} />}
-              {i !== (this.state.puntos.length - 1) && <button className="far fa-caret-square-down my-icon fa-lg mx-1 my-button" type="button" onClick={(e) => this.down(e, i)} />}
+        <div>
+          <div className='d-flex justify-content-between align-items-center my-2' key={i}>
+            <div>
+              <li className='text-justify m-0'>{punto.asunto}</li>
+              {punto.id_tipo_punto === 1 && <p className='text-justify m-0 my-muted'>*Este punto es votativo</p>}
+              {punto.comentario && <p className='text-justify m-0 my-muted'>Comentario: {punto.comentario}</p>}
             </div>
-            :
-            <button className="fas fa-trash-alt my-icon fa-lg mx-1 my-button" type="button" onClick={(e) => this.deleteDiscussion(e, punto.id_punto)} />
-          }
+            {this.state.ordenar ?
+              <div className='d-flex'>
+                {i !== 0 && <button className="far fa-caret-square-up my-icon fa-lg mx-1 my-button" type="button" onClick={(e) => this.up(e, i)} />}
+                {i !== (this.state.puntos.length - 1) && <button className="far fa-caret-square-down my-icon fa-lg mx-1 my-button" type="button" onClick={(e) => this.down(e, i)} />}
+              </div>
+              :
+              <div>
+                <button className="fas fa-paperclip my-icon fa-lg mx-0 my-button" type="button" />
+                <button className="fas fa-trash-alt my-icon fa-lg mx-4 my-button" type="button" onClick={(e) => this.deleteDiscussion(e, punto.id_punto)} />
+              </div>
+            }
+          </div>
+          <div className='d-flex align-items-center my-2'>
+            {!this.state.archivosVisibles[i] && <button className="fas fas fa-chevron-right fa-lg mx-1 my-button" type="button" onClick={(e) => this.handleFileVisibility(e, i)}/>}
+            {this.state.archivosVisibles[i] && <button className="fas fas fa-chevron-down fa-lg mx-1 my-button" type="button" onClick={(e) => this.handleFileVisibility(e, i)}/>}
+            {!this.state.archivosVisibles[i] && <p className='text-justify m-0 my-muted'>Mostrar archivos</p>}
+            {this.state.archivosVisibles[i] && <p className='text-justify m-0 my-muted'>Ocultar archivos</p>}
+          </div>
+          {this.state.archivosVisibles[i] && this.getDiscussionFiles()}
         </div>
       );
     }
     return discussions;
+  }
+
+  handleFileVisibility(e, i){
+    let archivosVisibles = this.state.archivosVisibles;
+    archivosVisibles[i] = !this.state.archivosVisibles[i];
+    this.setState({
+      archivosVisibles: archivosVisibles
+    });
+  }
+
+  getDiscussionFiles(){
+    const files = [];
+    for (let i = 0; i < 3; i++) {
+      files.push(
+        <div className='d-flex justify-content-around align-items-center my-2'>
+          <div>
+            <p className='text-justify m-0 my-muted'>No hay archivos adjuntos.</p>
+          </div>
+          <div>
+            <button className="fas fa-arrow-alt-circle-down my-icon fa-lg mx-0 my-button" type="button" />
+            <button className="fas fa-trash-alt my-icon fa-lg mx-4 my-button" type="button" />
+          </div>
+        </div>
+      );
+    }
+    return files;
   }
 
   getDiscussionTypes() {
