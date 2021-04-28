@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Redirect } from "react-router-dom";
 import axios from 'axios';
 import SolicitudAgenda from './SolicitudAgenda';
+import AgregarArchivo from './AgregarArchivo';
 import auth from "../../helpers/auth";
 
 export default class AgendaOficial extends Component {
@@ -200,7 +201,7 @@ export default class AgendaOficial extends Component {
               </div>
               :
               <div>
-                <button className="fas fa-paperclip my-icon fa-lg mx-0 my-button" type="button" />
+                <AgregarArchivo consecutivo={this.state.consecutivo} punto={punto} updateParent={this.handleUpdate} ordenar={this.state.ordenar} />
                 <button className="fas fa-trash-alt my-icon fa-lg mx-4 my-button" type="button" onClick={(e) => this.deleteDiscussion(e, punto.id_punto)} />
               </div>
             }
