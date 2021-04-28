@@ -156,18 +156,24 @@ export default class AgendaOficial extends Component {
   up(e, i) {
     e.preventDefault();
     let puntos = this.state.puntos;
+    let archivosVisibles = this.state.archivosVisibles;
     [puntos[i - 1], puntos[i]] = [puntos[i], puntos[i - 1]];
+    [archivosVisibles[i - 1], archivosVisibles[i]] = [archivosVisibles[i], archivosVisibles[i - 1]];
     this.setState({
-      puntos: puntos
+      puntos: puntos,
+      archivosVisibles: archivosVisibles
     });
   }
 
   down(e, i) {
     e.preventDefault();
     let puntos = this.state.puntos;
+    let archivosVisibles = this.state.archivosVisibles;
     [puntos[i + 1], puntos[i]] = [puntos[i], puntos[i + 1]];
+    [archivosVisibles[i + 1], archivosVisibles[i]] = [archivosVisibles[i], archivosVisibles[i + 1]];
     this.setState({
-      puntos: puntos
+      puntos: puntos,
+      archivosVisibles: archivosVisibles
     });
   }
 
