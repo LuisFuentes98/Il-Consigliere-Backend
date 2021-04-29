@@ -199,11 +199,14 @@ class DiscussionController {
     let bucketName = 'il-consigliere-files';
     let bucket = storage.bucket(bucketName);
     let fileList = [];
-    const [files] = await bucket.getFiles({ prefix: req.params.path});
+    const [files] = await bucket.getFiles({ prefix: `${req.params.consecutivo}/${req.params.idpunto}`});
     console.log('Files:');
     files.forEach(file => {
       console.log(file.name);
-      fileList.push(file.name);
+      fileList.push({
+        filename: file.name,
+        type: file.metadata.contentType,
+      });
     });
     res.json({
       msg: "success",
@@ -211,8 +214,29 @@ class DiscussionController {
     });
   }
 
-  static async downloadFile(req, res) {
-    res.end('todo');
+  static async downloadFile(req,res) {
+    const {filename} = req.body;
+    let bucketName = 'il-consigliere-files';
+    let bucket = storage.bucket(bucketName);
+    var fileRef = bucket.file(filename);
+    fileRef.exists().then(function(data){
+      console.log("File exists");
+    });
+
+    const config = {
+      action: 'read',
+      expires: Date.now()+600000
+    }
+    fileRef.getSignedUrl(config, function(err,url){
+      if(err){
+        res.json({
+          msg: "Failure",
+          err: err
+        })
+      }
+      res.end(url);
+    })
+    
   }
 
   static async uploadFile(req, res, next) {
@@ -220,7 +244,7 @@ class DiscussionController {
       async function uploadFile(file, folder) {
         let bucketName = 'il-consigliere-files'
         let bucket = storage.bucket(bucketName)
-        let newFilename = folder + '/' + Date.now() + '-' + file.originalname;
+        let newFilename = folder.replace(/ /g,"_") + '/' + Date.now() + '-' + file.originalname;
         let fileUpload = bucket.file(newFilename);
         const blobStream = fileUpload.createWriteStream({
           metadata: {
