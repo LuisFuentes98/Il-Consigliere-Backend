@@ -4,6 +4,8 @@ const DiscussionController = require('../controllers/DiscussionController');
 const router = Router();
 
 router.post('/', DiscussionController.store);
+router.get('/getFiles/:path', DiscussionController.getDiscussionFiles);
+router.post('/upload', DiscussionController.uploadFile);
 router.get('/aprobado/:consecutivo', DiscussionController.getDiscussions);
 router.get('/votacion/:consecutivo', DiscussionController.getVotingDiscussions);
 router.get('/solicitud/:consecutivo', DiscussionController.getRequests);

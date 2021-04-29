@@ -7,6 +7,7 @@ module.exports = {
     "database": process.env.DB_NAME_DEV,
     "host": process.env.DB_HOST_DEV,
     "dialect": "postgres",
+    "logging": false,
     "dialectOptions": {
       "native": true,
       "ssl": {
@@ -25,6 +26,7 @@ module.exports = {
   "production": {
     "use_env_variable": "DATABASE_URL", //desde heroku
     "dialect": "postgres",
+    "logging": false,
     "dialectOptions": {
       "native": true,
       "ssl": {

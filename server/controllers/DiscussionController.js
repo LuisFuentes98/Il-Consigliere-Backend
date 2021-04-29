@@ -1,4 +1,7 @@
 const db = require('../../database/models');
+const {storage} = require('../middleware/GcloudConfig');
+var multer = require('multer')
+var upload = multer().array('archivos')
 
 class DiscussionController {
 
@@ -191,6 +194,68 @@ class DiscussionController {
       });
     }
   }
+
+  static async getDiscussionFiles(req, res) {
+    let bucketName = 'il-consigliere-files';
+    let bucket = storage.bucket(bucketName);
+    let fileList = [];
+    const [files] = await bucket.getFiles({ prefix: req.params.path});
+    console.log('Files:');
+    files.forEach(file => {
+      console.log(file.name);
+      fileList.push(file.name);
+    });
+    res.json({
+      msg: "success",
+      files: fileList
+    });
+  }
+
+  static async downloadFile(req, res) {
+    res.end('todo');
+  }
+
+  static async uploadFile(req, res, next) {
+    try {
+      async function uploadFile(file, folder) {
+        let bucketName = 'il-consigliere-files'
+        let bucket = storage.bucket(bucketName)
+        let newFilename = folder + '/' + Date.now() + '-' + file.originalname;
+        let fileUpload = bucket.file(newFilename);
+        const blobStream = fileUpload.createWriteStream({
+          metadata: {
+            contentType: file.mimetype
+          }
+        });
+
+        blobStream.on('error', (error) => {
+          console.log('File upload Error: ' + error);
+        });
+
+        blobStream.on('finish', () => {
+          const url = `https://storage.googleapis.com/${bucket.name}/${fileUpload.name}`;
+          console.log(url);
+        });
+
+        blobStream.end(file.buffer);
+      }
+      upload(req, res, function (err) {
+        let files = req.files
+
+        for (let file in files) {
+          uploadFile(files[file], req.body.folder)
+        }
+
+        if (err) {
+          return res.end("Error uploading file." + err);
+        }
+        res.end("File is uploaded");
+      });
+    } catch (err) {
+      res.json({ "err": err });
+    }
+  }
+
 }
 
 module.exports = DiscussionController;
