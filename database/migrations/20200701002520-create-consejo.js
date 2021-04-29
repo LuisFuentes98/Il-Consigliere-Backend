@@ -51,7 +51,7 @@ module.exports = {
       editable: {
         allowNull: false,
         type: Sequelize.BOOLEAN
-      },
+      },      
       createdAt: {
         allowNull: false,
         type: Sequelize.DATEONLY,
@@ -61,6 +61,10 @@ module.exports = {
         allowNull: false,
         type: Sequelize.DATEONLY,
         defaultValue: Sequelize.fn('now')
+      },
+      finalizado: {
+        allowNull: false,
+        type: Sequelize.BOOLEAN
       }
     });
   },
