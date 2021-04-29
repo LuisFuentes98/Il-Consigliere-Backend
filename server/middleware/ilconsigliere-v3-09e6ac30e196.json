@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "ilconsigliere-v3",
+  "private_key_id": "09e6ac30e196d83fca3e6696d3c6bc945120f449",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvwIBADANBgkqhkiG9w0BAQEFAASCBKkwggSlAgEAAoIBAQCbMKbyWLfdbsQi\nrbnIamS8MfNB9tMzZOnZAlxsLtx+xwKpEsJzAfpMKvb2GTIyzc6ficaVYDmLaYfh\n2WEWFvywQII6i9IdvEtPYmPIXLiVBCJxeqq4I3bROjw+qNiN+oo52Cr3Cmi1ok5M\nlPMj2lWr9pWt7/aQImsc3qqdglapycIwn0u4jNu5mi8cq+XzqEbtmMGEbta74cRE\nyH7pQgQ1pWcqz8O1n9K50Pdy/rCBBFZm9hKTDb+DSk3tzM2idsmusDK35NzjjV0V\nJ2FLqgnjDN7d3BWrAnotEB4NMocEI5maSTuX3DkbOiXBr6uUfrWAF3E7t73VBXfe\nSFDhTAeHAgMBAAECggEAD80vYoO4DPrnS6SmwwpaQXNQkongTV5cFTWRVY6b8uiu\nk6qOVAmCg9joFnzQSK39+O6dYr5Ofax8Innw0b/7cLLQz8dG2LJAdM/O2yrdvIaU\nPzu/QEqUIY+tbK/ihOpawrMJBOhxavUgxdlwvFjR2lWcPf6t+1UV1PWzJ6CK1HTG\n9d7B3xGNaDr4VkQh8KaqjYYwEThpL8xUJwf7YlRAxrZq2WSmKr4WwkG/IYzPH+ZM\nDrRZmvw6c/IJvSlICBqZjCIliC8lSXYHBf8fhkMGFn4QcV8Iqz6MM8eIfCxrGAPA\ndQWASnxox2l6Vj1vWLiCwxdwnYghQOaY8ShmXEK9AQKBgQDWysgM4P9dXRXASpZI\nYsZrPlXN1IouxwlUNvuddijCsS9zwHqA/lrlrr5oxP9USrB4utAGci8t4lByervY\n9hn/97lzv1bYUp5j7SN6eCYxdZV93a0JlY9PDveIxQSjExMPHaEaKt4lDBAquOyg\nKaIkoP3/+KU4xZfgiausQ+2zBwKBgQC49pjqJFcdO7O2oM7ABlQFL8oVghGaQKuh\nh3IsXJfaA41BG9xHYZf2vGhmbMghERlJUg4sYRisPxd8alGNdeZ89Z+O9yXN6cV7\n0lgDUMoTX2GNcob5lPZHJhX22gqMHGILoJriFohUl/Vk0DkHRKguXn87cGO0jZyN\n3TYdoFtngQKBgQDPaU+WiCpvyLR5VE0cpy09YBtRQF0TYKXUiaedXP1tS9Yrq4Fg\nUL4Lrxs1Zo28oscYPiUlJFwErdbLRVNh5fwjXd7aM7kz+Uvz6Ilq+NzAw+/QdCBk\n8eRKDoTfsIiSxJeR8CWidCTBl42BA8OTwcBOKJw98qfxU3UeoTKCjbHaPwKBgQCY\nsYMlcGC2Um4XK4PjBJZiPcSPovQTKqZF0EJSGxKFOX9oK67bAtdoKrvpKo7AtZPx\ncpseyf2LXP5viHnQ1W8047UYWjHMXtvYT5q3Cf/4pDotgkmpSu9RZ0Ckq/YfGuNa\nA/k5Ai8D3vsHgdpChMxukzZoBG1bRbjjaKZfKN2sgQKBgQCsLaVU4DlVpWNKCiV2\n8MGDFSH91Br3teZade6cF9rBDHyMNPyEwbbYlzTQTFQjnG3ogHZRUq1xVjS3X33I\niNQ0gXdpvXo7GZNX24xwLT8YclBlKgCgXhg3+R/6GBUXsRbaRJu7WOsX+SctvEG0\nrrftO0aBxaMpEcCjEtUjHzlvgQ==\n-----END PRIVATE KEY-----\n",
+  "client_email": "il-consigliere-v3-credentials@ilconsigliere-v3.iam.gserviceaccount.com",
+  "client_id": "117307764919466925701",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/il-consigliere-v3-credentials%40ilconsigliere-v3.iam.gserviceaccount.com"
+}
