@@ -212,7 +212,7 @@ export default class AgendaOficial extends Component {
             {!this.state.archivosVisibles[i] && <p className='text-justify m-0 my-muted'>Mostrar archivos</p>}
             {this.state.archivosVisibles[i] && <p className='text-justify m-0 my-muted'>Ocultar archivos</p>}
           </div>
-          {this.state.archivosVisibles[i] && this.getDiscussionFiles()}
+          {this.state.archivosVisibles[i] && this.getDiscussionFiles(punto)}
         </div>
       );
     }
@@ -227,22 +227,38 @@ export default class AgendaOficial extends Component {
     });
   }
 
-  getDiscussionFiles(){
+  getDiscussionFiles(punto){
     const files = [];
-    for (let i = 0; i < 3; i++) {
-      files.push(
-        <div className='d-flex justify-content-around align-items-center my-2'>
-          <div>
-            <p className='text-justify m-0 my-muted'>No hay archivos adjuntos.</p>
-          </div>
-          <div>
-            <button className="fas fa-arrow-alt-circle-down my-icon fa-lg mx-0 my-button" type="button" />
-            <button className="fas fa-trash-alt my-icon fa-lg mx-4 my-button" type="button" />
-          </div>
-        </div>
-      );
-    }
-    return files;
+    axios.get(`/punto/getFiles/${this.state.consecutivo.split(' ').join('_')}/${punto.id_punto}`)
+      .then(res => {
+        if (res.data.success) {
+          if (res.data.files.length > 0) {
+            for (let i = 0; i < res.data.files.length; i++) {
+              files.push(
+                <div className='d-flex justify-content-around align-items-center my-2'>
+                  <div>
+                    <p className='text-justify m-0 my-muted'>{res.data.files[i].filename}</p>
+                  </div>
+                  <div>
+                    <button className="fas fa-arrow-alt-circle-down my-icon fa-lg mx-0 my-button" type="button" />
+                    <button className="fas fa-trash-alt my-icon fa-lg mx-4 my-button" type="button" />
+                  </div>
+                </div>
+              )};
+              return files;
+          } else {
+            files.push(
+              <div className='d-flex justify-content-around align-items-center my-2'>
+                <div>
+                  <p className='text-justify m-0 my-muted'>No hay archivos adjuntos.</p>
+                </div>
+              </div>
+            );
+            return files;
+          }
+        }
+      })
+      .catch((err) => console.log(err));
   }
 
   getDiscussionTypes() {
