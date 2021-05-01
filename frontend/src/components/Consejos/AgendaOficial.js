@@ -62,6 +62,10 @@ export default class AgendaOficial extends Component {
             puntos: []
           });
         }
+      }).then(() =>{
+        for (let i = 0; i < this.state.puntos.length; i++) {
+          this.getDiscussionFiles(this.state.puntos[i], i);
+        }
       })
       .catch((err) => console.log(err));
   }
@@ -212,7 +216,7 @@ export default class AgendaOficial extends Component {
             {!this.state.archivosVisibles[i] && <p className='text-justify m-0 my-muted'>Mostrar archivos</p>}
             {this.state.archivosVisibles[i] && <p className='text-justify m-0 my-muted'>Ocultar archivos</p>}
           </div>
-          {this.state.archivosVisibles[i] && this.getDiscussionFiles(punto)}
+          {this.state.archivosVisibles[i] && this.displayFiles(punto)}
         </div>
       );
     }
@@ -227,38 +231,56 @@ export default class AgendaOficial extends Component {
     });
   }
 
-  getDiscussionFiles(punto){
+  getDiscussionFiles(punto, i){
     const files = [];
     axios.get(`/punto/getFiles/${this.state.consecutivo.split(' ').join('_')}/${punto.id_punto}`)
       .then(res => {
         if (res.data.success) {
           if (res.data.files.length > 0) {
             for (let i = 0; i < res.data.files.length; i++) {
-              files.push(
-                <div className='d-flex justify-content-around align-items-center my-2'>
-                  <div>
-                    <p className='text-justify m-0 my-muted'>{res.data.files[i].filename}</p>
-                  </div>
-                  <div>
-                    <button className="fas fa-arrow-alt-circle-down my-icon fa-lg mx-0 my-button" type="button" />
-                    <button className="fas fa-trash-alt my-icon fa-lg mx-4 my-button" type="button" />
-                  </div>
-                </div>
-              )};
-              return files;
-          } else {
-            files.push(
-              <div className='d-flex justify-content-around align-items-center my-2'>
-                <div>
-                  <p className='text-justify m-0 my-muted'>No hay archivos adjuntos.</p>
-                </div>
-              </div>
-            );
-            return files;
+              files.push(res.data.files[i])
+            };
           }
+          punto['files'] = files;
+          this.setState(state => {
+            const puntos = state.puntos;
+            puntos[i] = punto;
+            return {
+              puntos,
+            };
+          });
         }
       })
       .catch((err) => console.log(err));
+      return true;
+  }
+
+  displayFiles(punto){
+    const fileData = [];
+    if(punto.files.length > 0){
+      for(let i = 0; i < punto.files.length; i++){
+        fileData.push(
+          <div className='d-flex justify-content-around align-items-center my-2'>
+          <div>
+            <p className='text-justify m-0 my-muted'>{punto.files[i].filename}</p>
+          </div>
+          <div>
+            <button className="fas fa-arrow-alt-circle-down my-icon fa-lg mx-0 my-button" type="button" />
+            <button className="fas fa-trash-alt my-icon fa-lg mx-4 my-button" type="button" />
+          </div>
+        </div>
+        );
+      }
+    }else{
+      fileData.push(
+        <div className='d-flex justify-content-around align-items-center my-2'>
+          <div>
+            <p className='text-justify m-0 my-muted'>No hay archivos adjuntos.</p>
+          </div>
+        </div>
+      );
+    }
+    return fileData;
   }
 
   getDiscussionTypes() {

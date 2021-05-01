@@ -178,7 +178,7 @@ export default class EditarConsejo extends Component {
                         <p className="my-muted">*Fecha límite para el envío de sugerencias de puntos de consejo.</p>
                       </div>
                       <div className="form-check">                        
-                          <input type="checkbox" class="form-check-input"  name="finalizado"
+                          <input type="checkbox" className="form-check-input"  name="finalizado"
                           checked={this.state.finalizado} onChange={(e) => {
                             this.handleInputChange({
                               target: {
@@ -186,7 +186,7 @@ export default class EditarConsejo extends Component {
                                 value: e.target.checked,
                               }
                             }); }} />
-                          <label class="form-check-label" for="exampleCheck1">Marcar consejo como finalizado</label>                        
+                          <label className="form-check-label" htmlFor="exampleCheck1">Marcar consejo como finalizado</label>                        
                       </div>
                     </div>
                     <div className='registro-container der'>
