@@ -82,20 +82,15 @@ export default class AgregarArchivo extends Component {
         {this.props.ordenar ?
           <button className="fas fa-paperclip my-disabled disabled fa-lg my-button" type="button" />
           :
-          <button className="fas fa-paperclip my-icon fa-lg my-button" type="button" data-toggle="modal" data-target="#subir_archivo" />
+          <button className="fas fa-paperclip my-icon fa-lg my-button" type="button" data-toggle="modal" data-target={"#"+this.props.modelName} />
         }
-        <div className="modal fade" id="subir_archivo" role="dialog">
+        <div className="modal fade" id={this.props.modelName} role="dialog">
           <div className="modal-dialog modal-dialog-centered" role="document">
             <div className="modal-content modal-border">
               <div className="modal-body">
                 <i className="fas fa-times fa-lg m-2 ubicar-salida my-icon" data-dismiss="modal"></i>
-                <h4 className="modal-title text-center mb-4">Subir archivos</h4>
+                <h4 className="modal-title text-center mb-4">{this.state.punto.asunto}</h4>
                 <form onSubmit={this.handleSubmit}>
-                    <div className="form-group">
-                        <button className="btn btn-primary" type="submit">
-                            Upload
-                        </button>
-                    </div>
                     <div className="filepond-wrapper">
                         <FilePond
                             files = {this.state.archivos}
@@ -106,10 +101,10 @@ export default class AgregarArchivo extends Component {
                         >
                         </FilePond>
                     </div>
+                    <div className='d-flex justify-content-center'>
+                      <button type="submit" className="btn btn-primary my-size mt-4" >Subir archivo(s)</button>
+                    </div>
                 </form>
-                <div className='d-flex justify-content-center'>
-                  <button type="button" className="btn btn-outline-primary my-size mt-4" data-dismiss="modal">Listo</button>
-                </div>
               </div>
             </div>
           </div>

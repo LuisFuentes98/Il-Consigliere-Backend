@@ -191,8 +191,8 @@ export default class AgendaOficial extends Component {
     for (let i = 0; i < this.state.puntos.length; i++) {
       let punto = this.state.puntos[i];
       discussions.push(
-        <div>
-          <div className='d-flex justify-content-between align-items-center my-2' key={i}>
+        <div key={i}>
+          <div className='d-flex justify-content-between align-items-center my-2'>
             <div>
               <li className='text-justify m-0'>{punto.asunto}</li>
               {punto.id_tipo_punto === 1 && <p className='text-justify m-0 my-muted'>*Este punto es votativo</p>}
@@ -205,7 +205,7 @@ export default class AgendaOficial extends Component {
               </div>
               :
               <div>
-                <AgregarArchivo consecutivo={this.state.consecutivo} punto={punto} updateParent={this.handleUpdate} ordenar={this.state.ordenar} />
+                <AgregarArchivo consecutivo={this.state.consecutivo} punto={this.state.puntos[i]} modelName={"subir_archivo"+i} updateParent={this.handleUpdate} ordenar={this.state.ordenar} />
                 <button className="fas fa-trash-alt my-icon fa-lg mx-4 my-button" type="button" onClick={(e) => this.deleteDiscussion(e, punto.id_punto)} />
               </div>
             }
