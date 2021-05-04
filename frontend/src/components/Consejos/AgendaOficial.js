@@ -24,6 +24,7 @@ export default class AgendaOficial extends Component {
     this.addDiscussion = this.addDiscussion.bind(this);
     this.deleteDiscussion = this.deleteDiscussion.bind(this);
     this.handleUpdate = this.handleUpdate.bind(this);
+    this.handleUpload = this.handleUpload.bind(this);
     this.sort = this.sort.bind(this);
     this.doneSorting = this.doneSorting.bind(this);
     this.up = this.up.bind(this);
@@ -49,8 +50,13 @@ export default class AgendaOficial extends Component {
       .then(resp => {
         if (resp.data.success) {
           let archivosVisibles = [];
-          for(let i=0; i<resp.data.discussions.length; i++){
-            archivosVisibles.push(false);
+          if(this.state.archivosVisibles.length !== 0){
+            archivosVisibles = this.state.archivosVisibles;
+          }
+          else{
+            for(let i=0; i<resp.data.discussions.length; i++){
+              archivosVisibles.push(false);
+            }
           }
           this.setState({
             archivosVisibles: archivosVisibles,
@@ -186,6 +192,11 @@ export default class AgendaOficial extends Component {
     this.getDiscussionsFromBD();
   }
 
+  handleUpload(){
+    //this.getDiscussionsFromBD();
+    //myAlert('Listo', `Se han subido los archivos de manera exitosa.`, 'success');
+  }
+
   getDiscussions() {
     const discussions = [];
     for (let i = 0; i < this.state.puntos.length; i++) {
@@ -205,7 +216,7 @@ export default class AgendaOficial extends Component {
               </div>
               :
               <div>
-                <AgregarArchivo consecutivo={this.state.consecutivo} punto={this.state.puntos[i]} modelName={"subir_archivo"+i} updateParent={this.handleUpdate} ordenar={this.state.ordenar} />
+                <AgregarArchivo consecutivo={this.state.consecutivo} punto={this.state.puntos[i]} modelName={"subir_archivo"+i} updateParent={this.handleUpload} />
                 <button className="fas fa-trash-alt my-icon fa-lg mx-4 my-button" type="button" onClick={(e) => this.deleteDiscussion(e, punto.id_punto)} />
               </div>
             }

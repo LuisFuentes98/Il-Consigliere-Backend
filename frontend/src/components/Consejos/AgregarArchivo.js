@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import axios from "axios";
 import auth from "../../helpers/auth";
+import $ from 'jquery';
+import { myAlert } from '../../helpers/alert';
 //file Upload
 import { FilePond, /*registerPlugin*/ } from "react-filepond"
 import "filepond/dist/filepond.min.css"
@@ -15,7 +17,8 @@ export default class AgregarArchivo extends Component {
     this.state = {
       consecutivo: this.props.consecutivo,
       punto: this.props.punto,
-      archivos: []
+      archivos: [],
+      redirect: false
     }
 
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -51,6 +54,8 @@ export default class AgregarArchivo extends Component {
     })
     axios.post(`/punto/upload`, formData, {}).then(res =>{
       console.log(res.data);
+      $("#"+this.props.modelName).modal('hide');
+      window.location.reload()
     });
   }
 
@@ -66,12 +71,11 @@ export default class AgregarArchivo extends Component {
   }
 
   render() {
+    $("#"+this.props.modelName).on('shown.bs.modal', function () {
+      $('#modal-input').focus();
+    });
     return <>
-        {this.props.ordenar ?
-          <button className="fas fa-paperclip my-disabled disabled fa-lg my-button" type="button" />
-          :
-          <button className="fas fa-paperclip my-icon fa-lg my-button" type="button" data-toggle="modal" data-target={"#"+this.props.modelName} />
-        }
+        <button className="fas fa-paperclip my-icon fa-lg my-button" type="button" data-toggle="modal" data-target={"#"+this.props.modelName} />
         <div className="modal fade" id={this.props.modelName} role="dialog">
           <div className="modal-dialog modal-dialog-centered" role="document">
             <div className="modal-content modal-border">
@@ -86,6 +90,7 @@ export default class AgregarArchivo extends Component {
                             server = {null}
                             instantUpload = {false}
                             onupdatefiles = {(fileItems) => this.onFileChange(fileItems)}
+                            labelIdle='Arrastra y suelta tus archivos o <span class="filepond--label-action">Buscalos</span>'
                         >
                         </FilePond>
                     </div>
