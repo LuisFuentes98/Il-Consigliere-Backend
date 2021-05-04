@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import axios from "axios";
 import auth from "../../helpers/auth";
-import { Redirect } from "react-router-dom";
 //file Upload
 import { FilePond, /*registerPlugin*/ } from "react-filepond"
 import "filepond/dist/filepond.min.css"
@@ -16,11 +15,9 @@ export default class AgregarArchivo extends Component {
     this.state = {
       consecutivo: this.props.consecutivo,
       punto: this.props.punto,
-      archivos: [],
-      redirect: false
+      archivos: []
     }
 
-    this.handleInputChange = this.handleInputChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.onFileChange = this.onFileChange.bind(this);
   }
@@ -38,14 +35,6 @@ export default class AgregarArchivo extends Component {
         }
       })
       .catch((err) => console.log(err));
-  }
-
-  handleInputChange(e) {
-    let value = e.target.value;
-    let name = e.target.name;
-    this.setState({
-        [name]: value
-    });
   }
 
   handleSubmit(e) {
@@ -70,15 +59,14 @@ export default class AgregarArchivo extends Component {
       this.setState(prevState =>{
         let archivos = [...prevState.archivos, items];
         return {
-          archivos,
+          archivos
         }
       });
       console.log(this.state.archivos);
   }
 
   render() {
-    return (this.state.redirect ? <Redirect to='/' /> :
-      <>
+    return <>
         {this.props.ordenar ?
           <button className="fas fa-paperclip my-disabled disabled fa-lg my-button" type="button" />
           :
@@ -102,7 +90,7 @@ export default class AgregarArchivo extends Component {
                         </FilePond>
                     </div>
                     <div className='d-flex justify-content-center'>
-                      <button type="submit" className="btn btn-primary my-size mt-4" >Subir archivo(s)</button>
+                      <button type="submit" className="btn btn-primary my-size mt-4">Subir archivo(s)</button>
                     </div>
                 </form>
               </div>
@@ -110,6 +98,5 @@ export default class AgregarArchivo extends Component {
           </div>
         </div>
       </>
-    );
   }
 }
