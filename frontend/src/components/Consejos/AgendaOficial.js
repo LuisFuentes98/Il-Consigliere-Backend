@@ -4,6 +4,7 @@ import axios from 'axios';
 import SolicitudAgenda from './SolicitudAgenda';
 import AgregarArchivo from './AgregarArchivo';
 import auth from "../../helpers/auth";
+import { myAlert } from "../../helpers/alert";
 
 export default class AgendaOficial extends Component {
   constructor(props) {
@@ -24,7 +25,6 @@ export default class AgendaOficial extends Component {
     this.addDiscussion = this.addDiscussion.bind(this);
     this.deleteDiscussion = this.deleteDiscussion.bind(this);
     this.handleUpdate = this.handleUpdate.bind(this);
-    this.handleUpload = this.handleUpload.bind(this);
     this.sort = this.sort.bind(this);
     this.doneSorting = this.doneSorting.bind(this);
     this.up = this.up.bind(this);
@@ -50,17 +50,21 @@ export default class AgendaOficial extends Component {
       .then(resp => {
         if (resp.data.success) {
           let archivosVisibles = [];
+          let puntos = [];
           if(this.state.archivosVisibles.length !== 0){
             archivosVisibles = this.state.archivosVisibles;
           }
           else{
             for(let i=0; i<resp.data.discussions.length; i++){
               archivosVisibles.push(false);
+              let punto = resp.data.discussions[i];
+              punto.editable = false;
+              puntos.push(punto);
             }
           }
           this.setState({
             archivosVisibles: archivosVisibles,
-            puntos: resp.data.discussions,
+            puntos: puntos,
             orden: resp.data.discussions.length
           });
         } else {
@@ -192,11 +196,6 @@ export default class AgendaOficial extends Component {
     this.getDiscussionsFromBD();
   }
 
-  handleUpload(){
-    //this.getDiscussionsFromBD();
-    //myAlert('Listo', `Se han subido los archivos de manera exitosa.`, 'success');
-  }
-
   getDiscussions() {
     const discussions = [];
     for (let i = 0; i < this.state.puntos.length; i++) {
@@ -204,11 +203,21 @@ export default class AgendaOficial extends Component {
       discussions.push(
         <div key={i}>
           <div className='d-flex justify-content-between align-items-center my-2'>
+            {this.state.puntos[i].editable ?
+            <div>
+              <li className='text-justify m-0'>Asunto:</li>
+              <textarea className="form-control" onChange={e => this.handleDiscussionSubjectChange(e, i)} value={punto.asunto} style={{ width: '200%' }} />
+              {punto.id_tipo_punto === 1 && <p className='text-justify m-0 my-muted'>*Este punto es votativo</p>}
+              <p className='text-justify m-0'>Comentario:</p>
+              <textarea className="form-control" onChange={e => this.handleDiscussionCommentChange(e, i)} value={punto.comentario} style={{ width: 'inherit' }} />
+            </div>
+            :
             <div>
               <li className='text-justify m-0'>{punto.asunto}</li>
               {punto.id_tipo_punto === 1 && <p className='text-justify m-0 my-muted'>*Este punto es votativo</p>}
               {punto.comentario && <p className='text-justify m-0 my-muted'>Comentario: {punto.comentario}</p>}
             </div>
+            }
             {this.state.ordenar ?
               <div className='d-flex'>
                 {i !== 0 && <button className="far fa-caret-square-up my-icon fa-lg mx-1 my-button" type="button" onClick={(e) => this.up(e, i)} />}
@@ -216,22 +225,88 @@ export default class AgendaOficial extends Component {
               </div>
               :
               <div>
-                <AgregarArchivo consecutivo={this.state.consecutivo} punto={this.state.puntos[i]} modelName={"subir_archivo"+i} updateParent={this.handleUpload} />
-                <button className="fas fa-trash-alt my-icon fa-lg mx-4 my-button" type="button" onClick={(e) => this.deleteDiscussion(e, punto.id_punto)} />
+                {this.state.puntos[i].editable ?
+                  <div>
+                    <button className="fas fa-check-circle my-icon fa-lg mx-4 my-button" type="button" onClick={(e) => this.acceptDiscussionChanges(e, i)} />
+                  </div>
+                  :
+                  <div>
+                    <button className="fas fa-edit my-icon fa-lg mx-4 my-button" type="button" onClick={(e) => this.makeEditable(e, i)} />
+                    <AgregarArchivo consecutivo={this.state.consecutivo} punto={this.state.puntos[i]} modelName={"subir_archivo"+i} />
+                    <button className="fas fa-trash-alt my-icon fa-lg mx-4 my-button" type="button" onClick={(e) => this.deleteDiscussion(e, punto.id_punto)} />
+                  </div>
+                }
               </div>
             }
           </div>
-          <div className='d-flex align-items-center my-2'>
-            {!this.state.archivosVisibles[i] && <button className="fas fas fa-chevron-right fa-lg mx-1 my-button" type="button" onClick={(e) => this.handleFileVisibility(e, i)}/>}
-            {this.state.archivosVisibles[i] && <button className="fas fas fa-chevron-down fa-lg mx-1 my-button" type="button" onClick={(e) => this.handleFileVisibility(e, i)}/>}
-            {!this.state.archivosVisibles[i] && <p className='text-justify m-0 my-muted'>Mostrar archivos</p>}
-            {this.state.archivosVisibles[i] && <p className='text-justify m-0 my-muted'>Ocultar archivos</p>}
-          </div>
-          {this.state.archivosVisibles[i] && this.displayFiles(punto)}
+          {!this.state.puntos[i].editable ?
+            <div>
+              <div className='d-flex align-items-center my-2'>
+                {!this.state.archivosVisibles[i] && <button className="fas fas fa-chevron-right fa-lg mx-1 my-button" type="button" onClick={(e) => this.handleFileVisibility(e, i)}/>}
+                {this.state.archivosVisibles[i] && <button className="fas fas fa-chevron-down fa-lg mx-1 my-button" type="button" onClick={(e) => this.handleFileVisibility(e, i)}/>}
+                {!this.state.archivosVisibles[i] && <p className='text-justify m-0 my-muted'>Mostrar archivos</p>}
+                {this.state.archivosVisibles[i] && <p className='text-justify m-0 my-muted'>Ocultar archivos</p>}
+              </div>
+              {this.state.archivosVisibles[i] && this.displayFiles(punto)}
+            </div>
+            :
+            <div></div>
+          }
+          
         </div>
       );
     }
     return discussions;
+  }
+
+  acceptDiscussionChanges(e, i) {
+    auth.verifyToken()
+      .then(value => {
+        if (value) {
+          axios.post(`/punto/modificar/${this.state.puntos[i].id_punto}`, {asunto: this.state.puntos[i].asunto, comentario: this.state.puntos[i].comentario})
+            .then(response => {
+              this.disableEditable(e, i);
+              myAlert("Listo", "Se ha modificado el punto de agenda con exito.", "success");
+            })
+            .catch((err) => console.log(err));
+        } else {
+          this.setState({
+            redirect: true
+          })
+          auth.logOut();
+        }
+      })
+      .catch((err) => console.log(err));
+  }
+
+  handleDiscussionSubjectChange(e, i) {
+    let puntos = this.state.puntos;
+    let value = e.target.value;
+    let punto = puntos[i];
+    punto.asunto = value;
+    this.setState({ puntos: puntos});
+  }
+
+  handleDiscussionCommentChange(e, i) {
+    let puntos = this.state.puntos;
+    let value = e.target.value;
+    let punto = puntos[i];
+    punto.comentario = value;
+    this.setState({ puntos: puntos});
+  }
+
+  makeEditable(e, i) {
+    e.preventDefault();
+    let puntos = this.state.puntos;
+    puntos[i].editable = true;
+    this.setState({ puntos: puntos });
+  }
+
+  disableEditable(e, i) {
+    e.preventDefault();
+    let puntos = this.state.puntos;
+    puntos[i].editable = false;
+    this.setState({ puntos: puntos });
   }
 
   handleFileVisibility(e, i){

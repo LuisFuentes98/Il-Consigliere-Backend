@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import axios from "axios";
 import auth from "../../helpers/auth";
 import $ from 'jquery';
-import { myAlert } from '../../helpers/alert';
 //file Upload
 import { FilePond, /*registerPlugin*/ } from "react-filepond"
 import "filepond/dist/filepond.min.css"

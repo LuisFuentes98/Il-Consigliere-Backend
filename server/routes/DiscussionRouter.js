@@ -4,6 +4,7 @@ const DiscussionController = require('../controllers/DiscussionController');
 const router = Router();
 
 router.post('/', DiscussionController.store);
+router.post('/modificar/:id_punto', DiscussionController.update);
 router.get('/getFiles/:consecutivo/:idpunto', DiscussionController.getDiscussionFiles);
 router.post('/upload', DiscussionController.uploadFile);
 router.post('/getURL', DiscussionController.downloadFile);

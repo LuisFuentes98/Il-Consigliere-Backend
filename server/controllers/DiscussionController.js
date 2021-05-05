@@ -116,6 +116,25 @@ class DiscussionController {
     }
   }
 
+  static async update(req, res) {
+    const {asunto, comentario} = req.body;
+    try {
+      await db.sequelize.transaction(async t => {
+        await db.Punto.update({
+          asunto: asunto,
+          comentario: comentario
+        }, { where: { id_punto: req.params.id_punto } });
+        res.json({
+          success: true
+        });
+      });
+    } catch (error) {
+      res.status(500).json({
+        msg: 'Error interno del servidor.'
+      });
+    }
+  }
+
   static async updateDiscussionsState(req, res) {
     const { id_estado_punto, asunto, orden } = req.body;
     try {
