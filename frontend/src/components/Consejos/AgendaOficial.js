@@ -51,6 +51,18 @@ export default class AgendaOficial extends Component {
     if(newWindow) newWindow.opener = null
   }
 
+  deleteFile(filename) {
+    axios.delete(`/punto/deleteFile/${filename}`)
+    .then(res =>{
+      if (res.data.success) {
+        console.log('file deleted')
+        window.location.reload()
+      }else{
+        console.log(res.data.msg);
+      }
+    });
+  }
+
   getDiscussionsFromBD() {
     axios.get(`/punto/aprobado/${this.state.consecutivo}`)
       .then(resp => {
@@ -352,20 +364,20 @@ export default class AgendaOficial extends Component {
     if(punto.files.length > 0){
       for(let i = 0; i < punto.files.length; i++){
         fileData.push(
-          <div className='d-flex justify-content-around align-items-center my-2'>
-          <div>
-            <p className='text-justify m-0 my-muted'>{punto.files[i].filename}</p>
+          <div key={punto.files[i].filename} className='d-flex justify-content-around align-items-center my-2'>
+            <div>
+              <p className='text-justify m-0 my-muted'>{punto.files[i].filename}</p>
+            </div>
+            <div>
+              <button className="fas fa-arrow-alt-circle-down my-icon fa-lg mx-0 my-button" type="button"  onClick={() => this.downloadFile(punto.files[i].filename)} />
+              <button className="fas fa-trash-alt my-icon fa-lg mx-4 my-button" type="button" onClick={() => this.deleteFile(punto.files[i].filename)}/>
+            </div>
           </div>
-          <div>
-            <button className="fas fa-arrow-alt-circle-down my-icon fa-lg mx-0 my-button" type="button"  onClick={() => this.downloadFile(punto.files[i].filename)} />
-            <button className="fas fa-trash-alt my-icon fa-lg mx-4 my-button" type="button" />
-          </div>
-        </div>
         );
       }
     }else{
       fileData.push(
-        <div className='d-flex justify-content-around align-items-center my-2'>
+        <div key='noFiles' className='d-flex justify-content-around align-items-center my-2'>
           <div>
             <p className='text-justify m-0 my-muted'>No hay archivos adjuntos.</p>
           </div>
