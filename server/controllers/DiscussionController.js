@@ -284,6 +284,26 @@ class DiscussionController {
     }
   }
 
+  static async deletefile(req, res){
+    try {
+      let bucketName = 'il-consigliere-files';
+      let bucket = storage.bucket(bucketName);
+      let filename = `${req.params.consecutivo}/${req.params.idpunto}/${req.params.filename}`;
+      console.log(filename);
+      await bucket.file(filename).delete()
+      .then(() => {
+        res.json({
+          success: true,
+          msg: "File deleted successfully",
+        });
+      });
+    } catch (error) {
+      res.status(500).json({
+        msg: 'Error interno del servidor: '+ err
+      });
+    }
+  }
+
 }
 
 module.exports = DiscussionController;
