@@ -45,6 +45,12 @@ export default class AgendaOficial extends Component {
       .catch((err) => console.log(err));
   }
 
+  downloadFile(filename) {
+    console.log("opening: ", filename);
+    const newWindow = window.open("https://storage.googleapis.com/il-consigliere-files/"+filename, '_blank', 'noopener,noreferrer')
+    if(newWindow) newWindow.opener = null
+  }
+
   getDiscussionsFromBD() {
     axios.get(`/punto/aprobado/${this.state.consecutivo}`)
       .then(resp => {
@@ -351,7 +357,7 @@ export default class AgendaOficial extends Component {
             <p className='text-justify m-0 my-muted'>{punto.files[i].filename}</p>
           </div>
           <div>
-            <button className="fas fa-arrow-alt-circle-down my-icon fa-lg mx-0 my-button" type="button" />
+            <button className="fas fa-arrow-alt-circle-down my-icon fa-lg mx-0 my-button" type="button"  onClick={() => this.downloadFile(punto.files[i].filename)} />
             <button className="fas fa-trash-alt my-icon fa-lg mx-4 my-button" type="button" />
           </div>
         </div>

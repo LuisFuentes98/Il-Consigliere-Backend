@@ -7,7 +7,6 @@ router.post('/', DiscussionController.store);
 router.post('/modificar/:id_punto', DiscussionController.update);
 router.get('/getFiles/:consecutivo/:idpunto', DiscussionController.getDiscussionFiles);
 router.post('/upload', DiscussionController.uploadFile);
-router.post('/getURL', DiscussionController.downloadFile);
 router.get('/aprobado/:consecutivo', DiscussionController.getDiscussions);
 router.get('/votacion/:consecutivo', DiscussionController.getVotingDiscussions);
 router.get('/solicitud/:consecutivo', DiscussionController.getRequests);

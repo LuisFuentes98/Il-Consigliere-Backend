@@ -243,31 +243,6 @@ class DiscussionController {
     }
   }
 
-  static async downloadFile(req,res) {
-    const {filename} = req.body;
-    let bucketName = 'il-consigliere-files';
-    let bucket = storage.bucket(bucketName);
-    var fileRef = bucket.file(filename);
-    fileRef.exists().then(function(data){
-      console.log("File exists");
-    });
-
-    const config = {
-      action: 'read',
-      expires: Date.now()+600000
-    }
-    fileRef.getSignedUrl(config, function(err,url){
-      if(err){
-        res.json({
-          msg: "Failure",
-          err: err
-        })
-      }
-      res.end(url);
-    })
-    
-  }
-
   static async uploadFile(req, res, next) {
     try {
       async function uploadFile(file, folder) {
