@@ -219,23 +219,18 @@ class DiscussionController {
       let bucketName = 'il-consigliere-files';
       let bucket = storage.bucket(bucketName);
       let fileList = [];
-      console.log(`${req.params.consecutivo}/${req.params.idpunto}`);
       const [files] = await bucket.getFiles({ prefix: `${req.params.consecutivo}/${req.params.idpunto}`});
-      console.log('Files:');
       files.forEach(file => {
-        console.log(file.name);
         fileList.push({
           filename: file.name,
           type: file.metadata.contentType,
         });
       });
-      console.log("Length = "+fileList.length);
       res.json({
         success: true,
         msg: "success",
         files: fileList
       });
-      console.log(res.data);
     } catch (error) {
       res.status(500).json({
         msg: 'Error interno del servidor.'
@@ -262,7 +257,6 @@ class DiscussionController {
 
         blobStream.on('finish', () => {
           const url = `https://storage.googleapis.com/${bucket.name}/${fileUpload.name}`;
-          console.log(url);
         });
 
         blobStream.end(file.buffer);
@@ -289,7 +283,6 @@ class DiscussionController {
       let bucketName = 'il-consigliere-files';
       let bucket = storage.bucket(bucketName);
       let filename = `${req.params.consecutivo}/${req.params.idpunto}/${req.params.filename}`;
-      console.log(filename);
       await bucket.file(filename).delete()
       .then(() => {
         res.json({

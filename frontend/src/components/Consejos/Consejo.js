@@ -19,7 +19,8 @@ export default class Consejos extends Component {
       isLoading: true,
       consecutivo: this.props.match.params.consecutivo,
       consejo: {},
-      aprobados: [],
+      puntos: [],
+      archivosVisibles: [],
       isCouncilModifier: roles.isCouncilModifier(),
       cedula: auth.getInfo().cedula,
       encontrado: true,
@@ -41,9 +42,17 @@ export default class Consejos extends Component {
                 axios.get(`/punto/aprobado/${this.state.consecutivo}`)
                   .then(resp => {
                     if (resp.data.success) {
+                      let archivosVisibles = [];
+                      for(let i=0; i<resp.data.discussions.length; i++){
+                        archivosVisibles.push(false);
+                      }
                       this.setState({
-                        aprobados: resp.data.discussions
+                        puntos: resp.data.discussions,
+                        archivosVisibles: archivosVisibles
                       });
+                      for (let i = 0; i < this.state.puntos.length; i++) {
+                        this.getDiscussionFiles(this.state.puntos[i], i);
+                      }
                     }
                   })
                   .catch((err) => console.log(err));
@@ -65,17 +74,97 @@ export default class Consejos extends Component {
       .catch((err) => console.log(err));
   }
 
+  getDiscussionFiles(punto, i){
+    const files = [];
+    axios.get(`/punto/getFiles/${this.state.consecutivo.split(' ').join('_')}/${punto.id_punto}`)
+      .then(res => {
+        if (res.data.success) {
+          if (res.data.files.length > 0) {
+            for (let i = 0; i < res.data.files.length; i++) {
+              files.push(res.data.files[i])
+            };
+          }
+          punto['files'] = files;
+          this.setState(state => {
+            const puntos = state.puntos;
+            puntos[i] = punto;
+            return {
+              puntos,
+            };
+          });
+        }
+      })
+      .catch((err) => console.log(err));
+      return true;
+  }
+
   getDiscussions() {
     const discussions = [];
-    for (let i = 0; i < this.state.aprobados.length; i++) {
+    for (let i = 0; i < this.state.puntos.length; i++) {
+      let punto = this.state.puntos[i];
       discussions.push(
-        <div>
-          <li className='m-0 text-justify' key={i}>{this.state.aprobados[i].asunto}</li>
-          {this.state.aprobados[i].comentario && <p className='text-justify m-0 my-muted'>Comentario: {this.state.aprobados[i].comentario}</p>}
+        <div key={i}>
+          <div className='justify-content-between align-items-center my-2'>
+            <li className='text-justify m-0'>{punto.asunto}</li>
+            <div>
+              {punto.id_tipo_punto === 1 && <p className='text-justify m-0 my-muted'>*Este punto es votativo</p>}
+              {punto.comentario && <p className='text-justify m-0 my-muted'>Comentario: {punto.comentario}</p>}
+            </div>
+          </div>
+          <div>
+            <div className='d-flex align-items-center my-2'>
+              {!this.state.archivosVisibles[i] && <button className="fas fas fa-chevron-right fa-lg mx-1 my-button" type="button" onClick={(e) => this.handleFileVisibility(e, i)}/>}
+              {this.state.archivosVisibles[i] && <button className="fas fas fa-chevron-down fa-lg mx-1 my-button" type="button" onClick={(e) => this.handleFileVisibility(e, i)}/>}
+              {!this.state.archivosVisibles[i] && <p className='text-justify m-0 my-muted'>Mostrar archivos</p>}
+              {this.state.archivosVisibles[i] && <p className='text-justify m-0 my-muted'>Ocultar archivos</p>}
+            </div>
+            {this.state.archivosVisibles[i] && this.displayFiles(punto)}
+          </div>
         </div>
-        );
+      );
     }
     return discussions;
+  }
+
+  handleFileVisibility(e, i){
+    let archivosVisibles = this.state.archivosVisibles;
+    archivosVisibles[i] = !this.state.archivosVisibles[i];
+    this.setState({
+      archivosVisibles: archivosVisibles
+    });
+  }
+
+  displayFiles(punto){
+    const fileData = [];
+    if(punto.files.length > 0){
+      for(let i = 0; i < punto.files.length; i++){
+        fileData.push(
+          <div key={punto.files[i].filename} className='d-flex justify-content-around align-items-center my-2'>
+            <div>
+              <p className='text-justify m-0 my-muted'>{punto.files[i].filename}</p>
+            </div>
+            <div>
+              <button className="fas fa-arrow-alt-circle-down my-icon fa-lg mx-0 my-button" type="button"  onClick={() => this.downloadFile(punto.files[i].filename)} />
+            </div>
+          </div>
+        );
+      }
+    }else{
+      fileData.push(
+        <div key='noFiles' className='d-flex justify-content-around align-items-center my-2'>
+          <div>
+            <p className='text-justify m-0 my-muted'>No hay archivos adjuntos.</p>
+          </div>
+        </div>
+      );
+    }
+    return fileData;
+  }
+
+  downloadFile(filename) {
+    console.log("opening: ", filename);
+    const newWindow = window.open("https://storage.googleapis.com/il-consigliere-files/"+filename, '_blank', 'noopener,noreferrer')
+    if(newWindow) newWindow.opener = null
   }
 
   render() {
@@ -106,6 +195,7 @@ export default class Consejos extends Component {
                     <p>Puntos de Agenda:</p>
                     <div className={this.state.isCouncilModifier ? 'punto-nonspace' : this.state.consejo.fecha < date ? 'punto-nonspace' : this.state.consejo.limite_solicitud < date ? 'punto-nonspace' : 'punto-consejo'}>
                       <ol className='pl-4 m-0'>
+                        {this.state.puntos.length === 0 && <p className='my-muted'>No se han agregado puntos de agenda.</p>}
                         {this.getDiscussions()}
                       </ol>
                     </div>
