@@ -89,6 +89,9 @@ export default class Navegacion extends Component {
                   <NavLink className="nav-link text" activeClassName="active" exact to="/">Inicio</NavLink>
                 </li>
                 <li className="nav-item">
+                  <NavLink className="nav-link text" activeClassName="active" exact to="/iConsejos">Consejos</NavLink>
+                </li>
+                <li className="nav-item">
                   <NavLink className="nav-link text" activeClassName="active" to="/acceso">Acceso</NavLink>
                 </li>
               </ul>

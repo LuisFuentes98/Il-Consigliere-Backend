@@ -16,6 +16,7 @@ import Registro from './components/Usuarios/Registro';
 import NuevaClave from './components/Usuarios/NuevaClave';
 import Usuario from './components/Usuarios/Usuario';
 import Cuenta from './components/Cuenta/Cuenta';
+import ConsejosPrincipal from './components/Consejos/ConsejosPrincipal';
 import ProtectedRoute from './helpers/ProtectedRoute';
 import DefaultComponent from './helpers/DefaultComponent';
 import { Role } from './helpers/Role';
@@ -39,6 +40,8 @@ function App() {
         <ProtectedRoute path='/proximosconsejos' component={VisualizarConsejosUsuario} />
         <ProtectedRoute path='/cuenta' component={Cuenta} />
         <Route path='/acceso' component={Acceso} />
+        <Route path='/iConsejos' component={ConsejosPrincipal} />
+        <Route path='/iConsejos/:consecutivo' component={Consejo} />
         <Route exact path='/' component={Inicio} />
         <Route path='*' component={DefaultComponent} />
       </Switch>
