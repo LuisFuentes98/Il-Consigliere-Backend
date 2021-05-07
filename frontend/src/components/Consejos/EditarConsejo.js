@@ -55,7 +55,8 @@ export default class EditarConsejo extends Component {
                   fecha: res.data.council.fecha,
                   hora: res.data.council.hora,
                   limite_solicitud: res.data.council.limite_solicitud,
-                  sesionSeleccionada: res.data.council.id_tipo_sesion
+                  sesionSeleccionada: res.data.council.id_tipo_sesion,
+                  finalizado : res.data.council.finalizado
                 });
               } else {
                 this.setState({
@@ -76,7 +77,10 @@ export default class EditarConsejo extends Component {
   }
 
   handleInputChange(e) {
-    let value = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
+    if(e.target.name === 'finalizado' && e.target.value === true){
+      myAlert('El consejo se ha marcado como finalizado.', `Una vez se guarden los cambios, no se podrá cancelar esta acción y el consejo quedará guardado como finalizado. `, 'warning');
+    }
+    let value = e.target.value;
     let name = e.target.name;
     this.setState({
       [name]: value
@@ -96,7 +100,8 @@ export default class EditarConsejo extends Component {
               lugar: this.state.lugar,
               fecha: this.state.fecha,
               hora: this.state.hora,
-              limite_solicitud: this.state.limite_solicitud
+              limite_solicitud: this.state.limite_solicitud,
+              finalizado: this.state.finalizado
             }
             axios.put(`/consejo/${this.state.consecutivo}`, consejo)
               .then(res => {
@@ -143,42 +148,47 @@ export default class EditarConsejo extends Component {
             <div className="card border-primary consejo-card">
               <div className="card-body">
                 <Link to='/gConsejos'><i className="fas fa-times fa-lg m-2 ubicar-salida" style={{ color: 'navy' }}></i></Link>
-                <form onSubmit={this.handleSubmit}>
                   <div className='todo-registro'>
                     <div className='registro-container izq'>
-                      <p className='text-center m-0 mb-2'>Edición Básica del Consejo {this.state.consecutivo}</p>
-                      <div className="form-group">
-                        <input type="text" required maxLength="100" name="lugar" autoFocus
-                          placeholder="Lugar" autoComplete="off" className="form-control"
-                          onChange={this.handleInputChange} value={this.state.lugar} />
-                        <p className='my-muted'>*Lugar donde se llevará a cabo el consejo.</p>
-                      </div>
-                      <p className='m-0'>Seleccione el tipo de sesión:</p>
-                      <div className="form-group">
-                        {this.getCouncilTypes()}
-                      </div>
-                      <div className="form-group">
-                        <input type="date" required name="fecha" min={this.state.hoy} className="form-control"
-                          onChange={this.handleInputChange} value={this.state.fecha} />
-                        <p className="my-muted">*Fecha en la que se llevará a cabo el consejo.</p>
-                      </div>
-                      <div className="form-group">
-                        <input type="time" required name="hora" min='07:00' max='20:00' step='900' className="form-control"
-                          onChange={this.handleInputChange} value={this.state.hora} />
-                        <p className='my-muted'>*Hora en la que se llevará a cabo el consejo.</p>
-                      </div>
-                      <div className="form-group">
-                        <input type="date" required name="limite_solicitud" min={this.state.hoy} className="form-control"
-                          onChange={this.handleInputChange} value={this.state.limite_solicitud} />
-                        <p className="my-muted">*Fecha límite para el envío de sugerencias de puntos de consejo.</p>
-                      </div>
-                      <div className="form-group">
-                        <div className="custom-control custom-checkbox">
-                          <input type="checkbox" className="custom-control-input" name="finalizado"
-                          checked={this.state.finalizado} onChange={this.handleInputChange} />
-                          <p className="custom-control-label" htmlFor='default'>Marcar consejo como finalizado</p>
+                      <form onSubmit={this.handleSubmit}>
+                        <p className='text-center m-0 mb-2'>Edición Básica del Consejo {this.state.consecutivo}</p>
+                        <div className="form-group">
+                          <input type="text" required maxLength="100" name="lugar" autoFocus
+                            placeholder="Lugar" autoComplete="off" className="form-control"
+                            onChange={this.handleInputChange} value={this.state.lugar} />
+                          <p className='my-muted'>*Lugar donde se llevará a cabo el consejo.</p>
                         </div>
-                      </div>
+                        <p className='m-0'>Seleccione el tipo de sesión:</p>
+                        <div className="form-group">
+                          {this.getCouncilTypes()}
+                        </div>
+                        <div className="form-group">
+                          <input type="date" required name="fecha" min={this.state.hoy} className="form-control"
+                            onChange={this.handleInputChange} value={this.state.fecha} />
+                          <p className="my-muted">*Fecha en la que se llevará a cabo el consejo.</p>
+                        </div>
+                        <div className="form-group">
+                          <input type="time" required name="hora" min='07:00' max='20:00' step='900' className="form-control"
+                            onChange={this.handleInputChange} value={this.state.hora} />
+                          <p className='my-muted'>*Hora en la que se llevará a cabo el consejo.</p>
+                        </div>
+                        <div className="form-group">
+                          <input type="date" required name="limite_solicitud" min={this.state.hoy} className="form-control"
+                            onChange={this.handleInputChange} value={this.state.limite_solicitud} />
+                          <p className="my-muted">*Fecha límite para el envío de sugerencias de puntos de consejo.</p>
+                        </div>
+                        <div className="form-check">                        
+                            <input type="checkbox" className="form-check-input"  name="finalizado"
+                            checked={this.state.finalizado} onChange={(e) => {
+                              this.handleInputChange({
+                                target: {
+                                  name: e.target.name,
+                                  value: e.target.checked,
+                                }
+                              }); }} />
+                            <label className="form-check-label" htmlFor="exampleCheck1">Marcar consejo como finalizado</label>                        
+                        </div>
+                      </form>
                     </div>
                     <div className='registro-container der'>
                       <AgendaOficial consecutivo={this.state.consecutivo} />
@@ -188,7 +198,6 @@ export default class EditarConsejo extends Component {
                     <button type="submit" className="btn btn-outline-primary mt-4 editar-button">Guardar Cambios</button>
                     <Link className="btn btn-outline-secondary mt-4 editar-button" to='/gConsejos'>Cancelar</Link>
                   </div>
-                </form>
               </div>
             </div>
           </div>

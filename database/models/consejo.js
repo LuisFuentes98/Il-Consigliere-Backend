@@ -17,7 +17,8 @@ module.exports = (sequelize, DataTypes) => {
     hora: { type: DataTypes.TIME, allowNull: false },
     limite_solicitud: { type: DataTypes.DATEONLY, allowNull: false },
     lugar: { type: DataTypes.STRING, allowNull: false },
-    editable: { type: DataTypes.BOOLEAN, allowNull: false }
+    editable: { type: DataTypes.BOOLEAN, allowNull: false },
+    finalizado: { type: DataTypes.BOOLEAN, allowNull: false }
   }, {
     freezeTableName: true
   });

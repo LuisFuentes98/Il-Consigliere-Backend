@@ -150,7 +150,7 @@ export default class SolicitudAgenda extends Component {
               <textarea name={value.id_punto} className="form-control" onChange={this.handleInputChange} value={value.asunto} style={{ width: 'inherited' }} />
             </div>
             <button className="fas fa-edit my-disabled fa-lg ml-4 my-button" type="button" onClick={(e) => this.disableEditable(e, value.id_punto)} />
-            <button className="far fa-check-circle my-icon fa-lg mx-2 my-button" type="button" onClick={(e) => this.acceptDiscussion(e, value.id_punto)} />
+            <button className="fas fa-check-circle my-icon fa-lg mx-2 my-button" type="button" onClick={(e) => this.acceptDiscussion(e, value.id_punto)} />
           </div>
         );
       } else {
@@ -159,7 +159,7 @@ export default class SolicitudAgenda extends Component {
             <p className='m-0 text-justify'>{value.nombre + ' ' + value.apellido}: {value.asunto}</p>
             <div className='d-flex justify-content-between align-items-center'>
               <button className="fas fa-edit my-icon fa-lg ml-4 my-button" type="button" onClick={(e) => this.makeEditable(e, value.id_punto)} />
-              <button className="far fa-check-circle my-icon fa-lg mx-2 my-button" type="button" onClick={(e) => this.acceptDiscussion(e, value.id_punto)} />
+              <button className="fas fa-check-circle my-icon fa-lg mx-2 my-button" type="button" onClick={(e) => this.acceptDiscussion(e, value.id_punto)} />
               <button className="fas fa-trash-alt my-icon fa-lg mx-1 my-button" type="button" onClick={(e) => this.deleteDiscussion(e, value.id_punto)}/>
             </div>
           </div>

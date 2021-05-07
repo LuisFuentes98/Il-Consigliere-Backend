@@ -1,4 +1,7 @@
 const db = require('../../database/models');
+const {storage} = require('../middleware/GcloudConfig');
+var multer = require('multer')
+var upload = multer().array('archivos')
 
 class DiscussionController {
 
@@ -113,6 +116,25 @@ class DiscussionController {
     }
   }
 
+  static async update(req, res) {
+    const {asunto, comentario} = req.body;
+    try {
+      await db.sequelize.transaction(async t => {
+        await db.Punto.update({
+          asunto: asunto,
+          comentario: comentario
+        }, { where: { id_punto: req.params.id_punto } });
+        res.json({
+          success: true
+        });
+      });
+    } catch (error) {
+      res.status(500).json({
+        msg: 'Error interno del servidor.'
+      });
+    }
+  }
+
   static async updateDiscussionsState(req, res) {
     const { id_estado_punto, asunto, orden } = req.body;
     try {
@@ -191,6 +213,97 @@ class DiscussionController {
       });
     }
   }
+
+  static async getDiscussionFiles(req, res) {
+    try {
+      let bucketName = 'il-consigliere-files';
+      let bucket = storage.bucket(bucketName);
+      let fileList = [];
+      console.log(`${req.params.consecutivo}/${req.params.idpunto}`);
+      const [files] = await bucket.getFiles({ prefix: `${req.params.consecutivo}/${req.params.idpunto}`});
+      console.log('Files:');
+      files.forEach(file => {
+        console.log(file.name);
+        fileList.push({
+          filename: file.name,
+          type: file.metadata.contentType,
+        });
+      });
+      console.log("Length = "+fileList.length);
+      res.json({
+        success: true,
+        msg: "success",
+        files: fileList
+      });
+      console.log(res.data);
+    } catch (error) {
+      res.status(500).json({
+        msg: 'Error interno del servidor.'
+      });
+    }
+  }
+
+  static async uploadFile(req, res, next) {
+    try {
+      async function uploadFile(file, folder) {
+        let bucketName = 'il-consigliere-files'
+        let bucket = storage.bucket(bucketName)
+        let newFilename = folder.replace(/ /g,"_") + '/' + Date.now() + '-' + file.originalname;
+        let fileUpload = bucket.file(newFilename);
+        const blobStream = fileUpload.createWriteStream({
+          metadata: {
+            contentType: file.mimetype
+          }
+        });
+
+        blobStream.on('error', (error) => {
+          console.log('File upload Error: ' + error);
+        });
+
+        blobStream.on('finish', () => {
+          const url = `https://storage.googleapis.com/${bucket.name}/${fileUpload.name}`;
+          console.log(url);
+        });
+
+        blobStream.end(file.buffer);
+      }
+      upload(req, res, function (err) {
+        let files = req.files
+
+        for (let file in files) {
+          uploadFile(files[file], req.body.folder)
+        }
+
+        if (err) {
+          return res.end("Error uploading file." + err);
+        }
+        res.end("File is uploaded");
+      });
+    } catch (err) {
+      res.json({ "err": err });
+    }
+  }
+
+  static async deletefile(req, res){
+    try {
+      let bucketName = 'il-consigliere-files';
+      let bucket = storage.bucket(bucketName);
+      let filename = `${req.params.consecutivo}/${req.params.idpunto}/${req.params.filename}`;
+      console.log(filename);
+      await bucket.file(filename).delete()
+      .then(() => {
+        res.json({
+          success: true,
+          msg: "File deleted successfully",
+        });
+      });
+    } catch (error) {
+      res.status(500).json({
+        msg: 'Error interno del servidor: '+ err
+      });
+    }
+  }
+
 }
 
 module.exports = DiscussionController;
