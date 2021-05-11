@@ -69,15 +69,17 @@ export default class AgendaOficial extends Component {
         if (resp.data.success) {
           let archivosVisibles = [];
           let puntos = [];
-          if(this.state.archivosVisibles.length !== 0){
+          for(let i=0; i<resp.data.discussions.length; i++){
+            let punto = resp.data.discussions[i];
+            punto.editable = false;
+            puntos.push(punto);
+          }
+          if(puntos.length !== 0){
             archivosVisibles = this.state.archivosVisibles;
           }
           else{
-            for(let i=0; i<resp.data.discussions.length; i++){
+            for(let i=0; i<puntos.length; i++){
               archivosVisibles.push(false);
-              let punto = resp.data.discussions[i];
-              punto.editable = false;
-              puntos.push(punto);
             }
           }
           this.setState({
