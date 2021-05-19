@@ -7,7 +7,6 @@ import DefaultComponent from '../../helpers/DefaultComponent';
 import { Loading } from '../../helpers/Loading';
 import { getTodaysDate } from '../../helpers/dates';
 import './Consejos.css';
-import SolicitudAgendaConvocado from './SolicitudAgendaConvocado';
 
 export default class ConsejoAnonimo extends Component {
 
@@ -188,9 +187,6 @@ export default class ConsejoAnonimo extends Component {
                         {this.getDiscussions()}
                       </ol>
                     </div>
-                    {this.state.consejo.fecha >= date && this.state.consejo.limite_solicitud >= date &&
-                      <SolicitudAgendaConvocado consecutivo={this.state.consecutivo} />
-                    }
                   </div>
                 </div>
               </div>
