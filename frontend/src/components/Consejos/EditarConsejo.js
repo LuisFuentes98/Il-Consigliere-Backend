@@ -148,47 +148,46 @@ export default class EditarConsejo extends Component {
             <div className="card border-primary consejo-card">
               <div className="card-body">
                 <Link to='/gConsejos'><i className="fas fa-times fa-lg m-2 ubicar-salida" style={{ color: 'navy' }}></i></Link>
+                <form onSubmit={this.handleSubmit}>
                   <div className='todo-registro'>
                     <div className='registro-container izq'>
-                      <form onSubmit={this.handleSubmit}>
-                        <p className='text-center m-0 mb-2'>Edición Básica del Consejo {this.state.consecutivo}</p>
-                        <div className="form-group">
-                          <input type="text" required maxLength="100" name="lugar" autoFocus
-                            placeholder="Lugar" autoComplete="off" className="form-control"
-                            onChange={this.handleInputChange} value={this.state.lugar} />
-                          <p className='my-muted'>*Lugar donde se llevará a cabo el consejo.</p>
-                        </div>
-                        <p className='m-0'>Seleccione el tipo de sesión:</p>
-                        <div className="form-group">
-                          {this.getCouncilTypes()}
-                        </div>
-                        <div className="form-group">
-                          <input type="date" required name="fecha" min={this.state.hoy} className="form-control"
-                            onChange={this.handleInputChange} value={this.state.fecha} />
-                          <p className="my-muted">*Fecha en la que se llevará a cabo el consejo.</p>
-                        </div>
-                        <div className="form-group">
-                          <input type="time" required name="hora" min='07:00' max='20:00' step='900' className="form-control"
-                            onChange={this.handleInputChange} value={this.state.hora} />
-                          <p className='my-muted'>*Hora en la que se llevará a cabo el consejo.</p>
-                        </div>
-                        <div className="form-group">
-                          <input type="date" required name="limite_solicitud" min={this.state.hoy} className="form-control"
-                            onChange={this.handleInputChange} value={this.state.limite_solicitud} />
-                          <p className="my-muted">*Fecha límite para el envío de sugerencias de puntos de consejo.</p>
-                        </div>
-                        <div className="form-check">                        
-                            <input type="checkbox" className="form-check-input"  name="finalizado"
-                            checked={this.state.finalizado} onChange={(e) => {
-                              this.handleInputChange({
-                                target: {
-                                  name: e.target.name,
-                                  value: e.target.checked,
-                                }
-                              }); }} />
-                            <label className="form-check-label" htmlFor="exampleCheck1">Marcar consejo como finalizado</label>                        
-                        </div>
-                      </form>
+                      <p className='text-center m-0 mb-2'>Edición Básica del Consejo {this.state.consecutivo}</p>
+                      <div className="form-group">
+                        <input type="text" required maxLength="100" name="lugar" autoFocus
+                          placeholder="Lugar" autoComplete="off" className="form-control"
+                          onChange={this.handleInputChange} value={this.state.lugar} />
+                        <p className='my-muted'>*Lugar donde se llevará a cabo el consejo.</p>
+                      </div>
+                      <p className='m-0'>Seleccione el tipo de sesión:</p>
+                      <div className="form-group">
+                        {this.getCouncilTypes()}
+                      </div>
+                      <div className="form-group">
+                        <input type="date" required name="fecha" min={this.state.hoy} className="form-control"
+                          onChange={this.handleInputChange} value={this.state.fecha} />
+                        <p className="my-muted">*Fecha en la que se llevará a cabo el consejo.</p>
+                      </div>
+                      <div className="form-group">
+                        <input type="time" required name="hora" min='07:00' max='20:00' step='900' className="form-control"
+                          onChange={this.handleInputChange} value={this.state.hora} />
+                        <p className='my-muted'>*Hora en la que se llevará a cabo el consejo.</p>
+                      </div>
+                      <div className="form-group">
+                        <input type="date" required name="limite_solicitud" min={this.state.hoy} className="form-control"
+                          onChange={this.handleInputChange} value={this.state.limite_solicitud} />
+                        <p className="my-muted">*Fecha límite para el envío de sugerencias de puntos de consejo.</p>
+                      </div>
+                      <div className="form-check">                        
+                          <input type="checkbox" className="form-check-input"  name="finalizado"
+                          checked={this.state.finalizado} onChange={(e) => {
+                            this.handleInputChange({
+                              target: {
+                                name: e.target.name,
+                                value: e.target.checked,
+                              }
+                            }); }} />
+                          <label className="form-check-label" htmlFor="exampleCheck1">Marcar consejo como finalizado</label>                        
+                      </div>
                     </div>
                     <div className='registro-container der'>
                       <AgendaOficial consecutivo={this.state.consecutivo} />
@@ -198,6 +197,7 @@ export default class EditarConsejo extends Component {
                     <button type="submit" className="btn btn-outline-primary mt-4 editar-button">Guardar Cambios</button>
                     <Link className="btn btn-outline-secondary mt-4 editar-button" to='/gConsejos'>Cancelar</Link>
                   </div>
+                </form>
               </div>
             </div>
           </div>
