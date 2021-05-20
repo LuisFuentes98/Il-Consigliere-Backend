@@ -39,12 +39,19 @@ class ArchivosDePunto extends Component {
         if(newWindow) newWindow.opener = null
     }
 
-    deleteFile(filename) {
-        axios.delete(`/punto/deleteFile/${filename}`)
+    deleteFile(file) {
+        axios.delete(`/punto/deleteFile/${file.filename}`)
         .then(res =>{
             if (res.data.success) {
                 console.log('file deleted')
-                window.location.reload()
+                let files = this.state.archivos;
+                let newFiles = [];
+                for(let i=0; i<files.length; i++){
+                    if(files[i]!==file){
+                        newFiles.push(files[i]);
+                    }
+                }
+                this.setState({ archivos: newFiles });
             }else{
                 console.log(res.data.msg);
             }
@@ -62,7 +69,7 @@ class ArchivosDePunto extends Component {
                 </div>
                 <div>
                     <button className="fas fa-arrow-alt-circle-down my-icon fa-lg mx-0 my-button" type="button"  onClick={() => this.downloadFile(this.state.archivos[i].filename)} />
-                    {this.props.editable && <button className="fas fa-trash-alt my-icon fa-lg mx-4 my-button" type="button" onClick={() => this.deleteFile(this.state.archivos[i].filename)}/>}
+                    {this.props.editable && <button className="fas fa-trash-alt my-icon fa-lg mx-4 my-button" type="button" onClick={() => this.deleteFile(this.state.archivos[i])}/>}
                     
                 </div>
                 </div>
