@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Redirect } from "react-router-dom";
 import axios from 'axios';
 import SolicitudAgenda from './SolicitudAgenda';
+import ArchivosDePunto from './ArchivosDePunto';
 import AgregarArchivo from './AgregarArchivo';
 import auth from "../../helpers/auth";
 import { myAlert } from "../../helpers/alert";
@@ -13,7 +14,6 @@ export default class AgendaOficial extends Component {
       consecutivo: this.props.consecutivo,
       punto: '',
       puntos: [],
-      archivosVisibles: [],
       tipoPunto: [],
       puntoSeleccionado: 1,
       ordenar: false,
@@ -45,45 +45,17 @@ export default class AgendaOficial extends Component {
       .catch((err) => console.log(err));
   }
 
-  downloadFile(filename) {
-    console.log("opening: ", filename);
-    const newWindow = window.open("https://storage.googleapis.com/il-consigliere-files/"+filename, '_blank', 'noopener,noreferrer')
-    if(newWindow) newWindow.opener = null
-  }
-
-  deleteFile(filename) {
-    axios.delete(`/punto/deleteFile/${filename}`)
-    .then(res =>{
-      if (res.data.success) {
-        console.log('file deleted')
-        window.location.reload()
-      }else{
-        console.log(res.data.msg);
-      }
-    });
-  }
-
   getDiscussionsFromBD() {
     axios.get(`/punto/aprobado/${this.state.consecutivo}`)
       .then(resp => {
         if (resp.data.success) {
-          let archivosVisibles = [];
           let puntos = [];
           for(let i=0; i<resp.data.discussions.length; i++){
             let punto = resp.data.discussions[i];
             punto.editable = false;
             puntos.push(punto);
           }
-          if(puntos.length !== 0){
-            archivosVisibles = this.state.archivosVisibles;
-          }
-          else{
-            for(let i=0; i<puntos.length; i++){
-              archivosVisibles.push(false);
-            }
-          }
           this.setState({
-            archivosVisibles: archivosVisibles,
             puntos: puntos,
             orden: resp.data.discussions.length
           });
@@ -92,12 +64,7 @@ export default class AgendaOficial extends Component {
             puntos: []
           });
         }
-      }).then(() =>{
-        for (let i = 0; i < this.state.puntos.length; i++) {
-          this.getDiscussionFiles(this.state.puntos[i], i);
-        }
-      })
-      .catch((err) => console.log(err));
+      }).catch((err) => console.log(err));
   }
 
   handleInputChange(e) {
@@ -118,10 +85,7 @@ export default class AgendaOficial extends Component {
               .then(res => {
                 if (res.data.success) {
                   this.getDiscussionsFromBD();
-                  let archivosVisibles = this.state.archivosVisibles;
-                  archivosVisibles.push(false);
                   this.setState({
-                    archivosVisibles: archivosVisibles,
                     punto: '',
                     orden: this.state.orden + 1
                   });
@@ -191,24 +155,18 @@ export default class AgendaOficial extends Component {
   up(e, i) {
     e.preventDefault();
     let puntos = this.state.puntos;
-    let archivosVisibles = this.state.archivosVisibles;
     [puntos[i - 1], puntos[i]] = [puntos[i], puntos[i - 1]];
-    [archivosVisibles[i - 1], archivosVisibles[i]] = [archivosVisibles[i], archivosVisibles[i - 1]];
     this.setState({
-      puntos: puntos,
-      archivosVisibles: archivosVisibles
+      puntos: puntos
     });
   }
 
   down(e, i) {
     e.preventDefault();
     let puntos = this.state.puntos;
-    let archivosVisibles = this.state.archivosVisibles;
     [puntos[i + 1], puntos[i]] = [puntos[i], puntos[i + 1]];
-    [archivosVisibles[i + 1], archivosVisibles[i]] = [archivosVisibles[i], archivosVisibles[i + 1]];
     this.setState({
-      puntos: puntos,
-      archivosVisibles: archivosVisibles
+      puntos: puntos
     });
   }
 
@@ -259,16 +217,8 @@ export default class AgendaOficial extends Component {
               </div>
             }
           </div>
-          {!this.state.puntos[i].editable ?
-            <div>
-              <div className='d-flex align-items-center my-2'>
-                {!this.state.archivosVisibles[i] && <button className="fas fas fa-chevron-right fa-lg mx-1 my-button" type="button" onClick={(e) => this.handleFileVisibility(e, i)}/>}
-                {this.state.archivosVisibles[i] && <button className="fas fas fa-chevron-down fa-lg mx-1 my-button" type="button" onClick={(e) => this.handleFileVisibility(e, i)}/>}
-                {!this.state.archivosVisibles[i] && <p className='text-justify m-0 my-muted'>Mostrar archivos</p>}
-                {this.state.archivosVisibles[i] && <p className='text-justify m-0 my-muted'>Ocultar archivos</p>}
-              </div>
-              {this.state.archivosVisibles[i] && this.displayFiles(punto)}
-            </div>
+          {(!this.state.puntos[i].editable && !this.state.ordenar) ?
+            <ArchivosDePunto consecutivo={this.state.consecutivo} punto={this.state.puntos[i]} editable={true}/>
             :
             <div></div>
           }
@@ -327,66 +277,6 @@ export default class AgendaOficial extends Component {
     let puntos = this.state.puntos;
     puntos[i].editable = false;
     this.setState({ puntos: puntos });
-  }
-
-  handleFileVisibility(e, i){
-    let archivosVisibles = this.state.archivosVisibles;
-    archivosVisibles[i] = !this.state.archivosVisibles[i];
-    this.setState({
-      archivosVisibles: archivosVisibles
-    });
-  }
-
-  getDiscussionFiles(punto, i){
-    const files = [];
-    axios.get(`/punto/getFiles/${this.state.consecutivo.split(' ').join('_')}/${punto.id_punto}`)
-      .then(res => {
-        if (res.data.success) {
-          if (res.data.files.length > 0) {
-            for (let i = 0; i < res.data.files.length; i++) {
-              files.push(res.data.files[i])
-            };
-          }
-          punto['files'] = files;
-          this.setState(state => {
-            const puntos = state.puntos;
-            puntos[i] = punto;
-            return {
-              puntos,
-            };
-          });
-        }
-      })
-      .catch((err) => console.log(err));
-      return true;
-  }
-
-  displayFiles(punto){
-    const fileData = [];
-    if(punto.files.length > 0){
-      for(let i = 0; i < punto.files.length; i++){
-        fileData.push(
-          <div key={punto.files[i].filename} className='d-flex justify-content-around align-items-center my-2'>
-            <div>
-              <p className='text-justify m-0 my-muted'>{punto.files[i].filename}</p>
-            </div>
-            <div>
-              <button className="fas fa-arrow-alt-circle-down my-icon fa-lg mx-0 my-button" type="button"  onClick={() => this.downloadFile(punto.files[i].filename)} />
-              <button className="fas fa-trash-alt my-icon fa-lg mx-4 my-button" type="button" onClick={() => this.deleteFile(punto.files[i].filename)}/>
-            </div>
-          </div>
-        );
-      }
-    }else{
-      fileData.push(
-        <div key='noFiles' className='d-flex justify-content-around align-items-center my-2'>
-          <div>
-            <p className='text-justify m-0 my-muted'>No hay archivos adjuntos.</p>
-          </div>
-        </div>
-      );
-    }
-    return fileData;
   }
 
   getDiscussionTypes() {
