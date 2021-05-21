@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Redirect } from 'react-router-dom';
+import { Redirect, Link } from 'react-router-dom';
 import axios from 'axios';
 import Navegacion from '../Navegacion/Navegacion';
 import auth from '../../helpers/auth';
@@ -7,7 +7,7 @@ import roles from '../../helpers/roles';
 import { myAlert } from '../../helpers/alert';
 import './Acceso.css';
 import RecuperarClave from './RecuperarClave';
-
+import SolicitarAcceso from './SolicitarAcceso';
 export default class Acceso extends Component {
   constructor(props) {
     super(props);
@@ -106,7 +106,7 @@ export default class Acceso extends Component {
             </div>
             <div className="alert alert-dismissible my-border alert-light pb-0">
               <button type="button" className="close" data-dismiss="alert">&times;</button>
-              <p>Recuerde solicitar una invitación para crear tu cuenta previamente.</p>
+              <SolicitarAcceso/>
             </div>
           </div>
         </div>
