@@ -14,6 +14,7 @@ export default class SolicitarAcceso extends Component {
         };
         this.handleInputChange = this.handleInputChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.button = React.createRef();
     }
 
     componentDidMount() {
@@ -32,18 +33,20 @@ export default class SolicitarAcceso extends Component {
         axios.post('/correo/verificar_correo', { correo: this.state.correo })
             .then(respo => {
                 if (!respo.data.taken) {
+                    this.button.current.setAttribute('disabled', 'disabled');
+                    this.button.current.style.cursor = 'progress';
                     axios.post('usuario/solicitar_acceso', {cedula: this.state.cedula, correo: this.state.correo})
                     .then(res=>{
                         if(res.data.success){
                             myAlert('Atencion', 'Solicitud enviada exitosamente, espere un correo del administrador.', 'success')
-                            $('#SolAcceso').modal('hide');
-                                this.button.current.removeAttribute('disabled', 'disabled');
-                                this.button.current.style.cursor = 'default';
                         }else{
                             myAlert('Atencion', 'Error interno del servidor.', 'error');
-                            this.setState({'correo': ''});
                         }
+                        $('#SolAcceso').modal('hide');
+                        this.button.current.removeAttribute('disabled', 'disabled');
+                        this.button.current.style.cursor = 'default';
                     })
+                    .catch((err) => console.log(err));
                 } else {
                     myAlert('Atención', 'Ya existe un usuario con este correo en el sistema.', 'warning');
                     this.setState({'correo': ''});
@@ -59,7 +62,7 @@ export default class SolicitarAcceso extends Component {
         return (
             <>
                 <div className='d-flex justify-content-center mt-2'>
-                    <button type='button' className="my-link" data-toggle="modal" data-target="#SolAcceso">
+                    <button type='button' className="my-link text-center" style={{backgroundColor: 'transparent'}} data-toggle="modal" data-target="#SolAcceso">
                         Solicitar Acesso al sistema.
                     </button>
                 </div>

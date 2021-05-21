@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Redirect, Link } from 'react-router-dom';
+import { Redirect } from 'react-router-dom';
 import axios from 'axios';
 import Navegacion from '../Navegacion/Navegacion';
 import auth from '../../helpers/auth';
@@ -104,10 +104,7 @@ export default class Acceso extends Component {
                 <RecuperarClave cedula={this.state.cedula} />
               </div>
             </div>
-            <div className="alert alert-dismissible my-border alert-light pb-0">
-              <button type="button" className="close" data-dismiss="alert">&times;</button>
-              <SolicitarAcceso/>
-            </div>
+            <SolicitarAcceso/>
           </div>
         </div>
       </>
