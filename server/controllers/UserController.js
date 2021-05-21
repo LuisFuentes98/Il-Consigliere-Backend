@@ -429,6 +429,54 @@ class UserController {
       });
     }
   }
+
+  static async solicitarAcceso(req, res) {
+    const { cedula, correo } = req.body;
+    console.log('solicitando');
+    try {
+        const transporter = nodemailer.createTransport({
+          service: 'gmail',
+          auth: {
+            user: `${process.env.EMAIL}`,
+            pass: `${process.env.EMAIL_PASS}`
+          }
+        });
+        const mailOptions = {
+          from: `${process.env.EMAIL}`,
+          to: `${process.env.EMAIL}`,
+          subject: 'Nueva solicitud de acceso al sistema',
+          text:
+            `Se ha recibido una nueva solicitud de acceso al sistema con los datos:
+            \n
+            \n
+            Cedula del solicitante: ${cedula}
+            \n
+            Correo del solicitante: ${correo}
+            \n
+            Por favor enviar link de registro.
+            \n
+            \n
+            *Correo generado automáticamente por el sistema Il Consigliere`
+        };
+        transporter.sendMail(mailOptions, (err, resp) => {
+          if (err) {
+            res.status(500).json({
+              msg: 'Error.',
+              err: err
+            });
+          } else {
+            res.json({
+              success: true,
+              msg: resp
+            });
+          }
+        });
+    } catch (error) {
+      res.status(500).json({
+        msg: 'Error interno del servidor.'
+      });
+    }
+  }
 }
 
 module.exports = UserController;
