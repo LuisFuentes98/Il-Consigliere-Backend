@@ -10,6 +10,7 @@ import roles from '../../helpers/roles';
 import { getTodaysDate } from '../../helpers/dates';
 import './Consejos.css';
 import SolicitudAgendaConvocado from './SolicitudAgendaConvocado';
+import ArchivosDePunto from './ArchivosDePunto';
 
 export default class Consejos extends Component {
 
@@ -20,7 +21,6 @@ export default class Consejos extends Component {
       consecutivo: this.props.match.params.consecutivo,
       consejo: {},
       puntos: [],
-      archivosVisibles: [],
       isCouncilModifier: roles.isCouncilModifier(),
       cedula: auth.getInfo().cedula,
       encontrado: true,
@@ -74,30 +74,6 @@ export default class Consejos extends Component {
       .catch((err) => console.log(err));
   }
 
-  getDiscussionFiles(punto, i){
-    const files = [];
-    axios.get(`/punto/getFiles/${this.state.consecutivo.split(' ').join('_')}/${punto.id_punto}`)
-      .then(res => {
-        if (res.data.success) {
-          if (res.data.files.length > 0) {
-            for (let i = 0; i < res.data.files.length; i++) {
-              files.push(res.data.files[i])
-            };
-          }
-          punto['files'] = files;
-          this.setState(state => {
-            const puntos = state.puntos;
-            puntos[i] = punto;
-            return {
-              puntos,
-            };
-          });
-        }
-      })
-      .catch((err) => console.log(err));
-      return true;
-  }
-
   getDiscussions() {
     const discussions = [];
     for (let i = 0; i < this.state.puntos.length; i++) {
@@ -112,59 +88,12 @@ export default class Consejos extends Component {
             </div>
           </div>
           <div>
-            <div className='d-flex align-items-center my-2'>
-              {!this.state.archivosVisibles[i] && <button className="fas fas fa-chevron-right fa-lg mx-1 my-button" type="button" onClick={(e) => this.handleFileVisibility(e, i)}/>}
-              {this.state.archivosVisibles[i] && <button className="fas fas fa-chevron-down fa-lg mx-1 my-button" type="button" onClick={(e) => this.handleFileVisibility(e, i)}/>}
-              {!this.state.archivosVisibles[i] && <p className='text-justify m-0 my-muted'>Mostrar archivos</p>}
-              {this.state.archivosVisibles[i] && <p className='text-justify m-0 my-muted'>Ocultar archivos</p>}
-            </div>
-            {this.state.archivosVisibles[i] && this.displayFiles(punto)}
+            <ArchivosDePunto consecutivo={this.state.consecutivo} punto={this.state.puntos[i]} editable={false}/>
           </div>
         </div>
       );
     }
     return discussions;
-  }
-
-  handleFileVisibility(e, i){
-    let archivosVisibles = this.state.archivosVisibles;
-    archivosVisibles[i] = !this.state.archivosVisibles[i];
-    this.setState({
-      archivosVisibles: archivosVisibles
-    });
-  }
-
-  displayFiles(punto){
-    const fileData = [];
-    if(punto.files.length > 0){
-      for(let i = 0; i < punto.files.length; i++){
-        fileData.push(
-          <div key={punto.files[i].filename} className='d-flex justify-content-around align-items-center my-2'>
-            <div>
-              <p className='text-justify m-0 my-muted'>{punto.files[i].filename}</p>
-            </div>
-            <div>
-              <button className="fas fa-arrow-alt-circle-down my-icon fa-lg mx-0 my-button" type="button"  onClick={() => this.downloadFile(punto.files[i].filename)} />
-            </div>
-          </div>
-        );
-      }
-    }else{
-      fileData.push(
-        <div key='noFiles' className='d-flex justify-content-around align-items-center my-2'>
-          <div>
-            <p className='text-justify m-0 my-muted'>No hay archivos adjuntos.</p>
-          </div>
-        </div>
-      );
-    }
-    return fileData;
-  }
-
-  downloadFile(filename) {
-    console.log("opening: ", filename);
-    const newWindow = window.open("https://storage.googleapis.com/il-consigliere-files/"+filename, '_blank', 'noopener,noreferrer')
-    if(newWindow) newWindow.opener = null
   }
 
   render() {

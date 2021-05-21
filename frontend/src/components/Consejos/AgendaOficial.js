@@ -171,7 +171,9 @@ export default class AgendaOficial extends Component {
   }
 
   handleUpdate() {
+    this.setState({ puntos: [] });
     this.getDiscussionsFromBD();
+    myAlert("Listo", "Se han actualizado los puntos de agenda.", "success");
   }
 
   getDiscussions() {
@@ -210,7 +212,7 @@ export default class AgendaOficial extends Component {
                   :
                   <div>
                     <button className="fas fa-edit my-icon fa-lg mx-4 my-button" type="button" onClick={(e) => this.makeEditable(e, i)} />
-                    <AgregarArchivo consecutivo={this.state.consecutivo} punto={this.state.puntos[i]} modelName={"subir_archivo"+i} />
+                    <AgregarArchivo consecutivo={this.state.consecutivo} punto={this.state.puntos[i]} modelName={"subir_archivo"+i} updateParent={this.handleUpdate}/>
                     <button className="fas fa-trash-alt my-icon fa-lg mx-4 my-button" type="button" onClick={(e) => this.deleteDiscussion(e, punto.id_punto)} />
                   </div>
                 }

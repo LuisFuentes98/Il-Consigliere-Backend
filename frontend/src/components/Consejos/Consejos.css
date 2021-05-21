@@ -12,7 +12,9 @@
 }
 
 .punto-consejo {
-    height: 230px;
+    min-height: 230px;
+    height: inherit;
+    max-height: 300px;
     overflow: auto;
 }
 
@@ -52,7 +54,8 @@
 }
 
 .solicitud-container {
-    height: 100px;
+    height: inherit;
+    max-height: 300px;
     overflow: auto;
 }
 

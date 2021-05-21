@@ -39,8 +39,10 @@ export default class AgregarArchivo extends Component {
       .catch((err) => console.log(err));
   }
 
-  handleSubmit(e) {
-    e.preventDefault();
+  handleSubmit() {
+    if(this.state.archivos.length === 0){
+      return;
+    }
     var folder = '';
     const formData = new FormData();
     for(let archivo in this.state.archivos[0]){
@@ -53,8 +55,9 @@ export default class AgregarArchivo extends Component {
     })
     axios.post(`/punto/upload`, formData, {}).then(res =>{
       console.log(res.data);
+      this.setState({ archivos: [] });
       $("#"+this.props.modelName).modal('hide');
-      window.location.reload()
+      this.props.updateParent();
     });
   }
 
@@ -81,7 +84,7 @@ export default class AgregarArchivo extends Component {
               <div className="modal-body">
                 <i className="fas fa-times fa-lg m-2 ubicar-salida my-icon" data-dismiss="modal"></i>
                 <h4 className="modal-title text-center mb-4">{this.state.punto.asunto}</h4>
-                <form onSubmit={this.handleSubmit}>
+                <div>
                     <div className="filepond-wrapper">
                         <FilePond
                             files = {this.state.archivos}
@@ -94,9 +97,9 @@ export default class AgregarArchivo extends Component {
                         </FilePond>
                     </div>
                     <div className='d-flex justify-content-center'>
-                      <button type="submit" className="btn btn-primary my-size mt-4">Subir archivo(s)</button>
+                      <button type="button" className="btn btn-primary my-size mt-4" onClick={() => this.handleSubmit()}>Subir archivo(s)</button>
                     </div>
-                </form>
+                </div>
               </div>
             </div>
           </div>

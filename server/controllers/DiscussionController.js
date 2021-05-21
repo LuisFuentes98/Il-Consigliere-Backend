@@ -54,7 +54,7 @@ class DiscussionController {
   static async getRequestsByUser(req, res) {
     try {
       await db.sequelize.transaction(async t => {
-        const discussions = await db.Punto.findAll({ attributes: ['id_punto', 'asunto'], where: { consecutivo: req.params.consecutivo, cedula: req.params.cedula, id_estado_punto: 2 } });
+        const discussions = await db.Punto.findAll({ attributes: ['id_punto', 'asunto', 'comentario', 'id_tipo_punto'], where: { consecutivo: req.params.consecutivo, cedula: req.params.cedula, id_estado_punto: 2 } });
         if (discussions.length > 0) {
           res.json({
             success: true,
@@ -98,11 +98,11 @@ class DiscussionController {
   }
 
   static async store(req, res) {
-    const { consecutivo, asunto, orden, cedula, id_estado_punto, id_tipo_punto } = req.body;
+    const { consecutivo, asunto, comentario, orden, cedula, id_estado_punto, id_tipo_punto } = req.body;
     try {
       await db.sequelize.transaction(async t => {
         await db.Punto.create({
-          consecutivo: consecutivo, asunto: asunto, id_estado_punto: id_estado_punto,
+          consecutivo: consecutivo, asunto: asunto, comentario: comentario, id_estado_punto: id_estado_punto,
           cedula: cedula, id_tipo_punto: id_tipo_punto, orden: orden
         });
         res.json({
