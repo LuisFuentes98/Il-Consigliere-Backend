@@ -32,10 +32,18 @@ export default class SolicitarAcceso extends Component {
         axios.post('/correo/verificar_correo', { correo: this.state.correo })
             .then(respo => {
                 if (!respo.data.taken) {
-                    myAlert('Atencion', 'Solicitud enviada exitosamente, espere un correo del administrador.', 'success')
-                    $('#SolAcceso').modal('hide');
-                        this.button.current.removeAttribute('disabled', 'disabled');
-                        this.button.current.style.cursor = 'default';
+                    axios.post('usuario/solicitar_acceso', {cedula: this.state.cedula, correo: this.state.correo})
+                    .then(res=>{
+                        if(res.data.success){
+                            myAlert('Atencion', 'Solicitud enviada exitosamente, espere un correo del administrador.', 'success')
+                            $('#SolAcceso').modal('hide');
+                                this.button.current.removeAttribute('disabled', 'disabled');
+                                this.button.current.style.cursor = 'default';
+                        }else{
+                            myAlert('Atencion', 'Error interno del servidor.', 'error');
+                            this.setState({'correo': ''});
+                        }
+                    })
                 } else {
                     myAlert('Atención', 'Ya existe un usuario con este correo en el sistema.', 'warning');
                     this.setState({'correo': ''});
