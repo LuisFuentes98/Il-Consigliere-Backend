@@ -5,6 +5,7 @@ const router = Router();
 
 router.get('/', UserController.getUsers.bind(UserController));
 router.post('/', UserController.store.bind(UserController));
+router.post('/solicitar_acceso', UserController.solicitarAcceso.bind(UserController));
 router.post('/enviar_link', UserController.sendLink.bind(UserController));
 router.post('/inicio_sesion', UserController.authenticate.bind(UserController));
 router.post('/verificar_token', UserController.verifyToken.bind(UserController));
