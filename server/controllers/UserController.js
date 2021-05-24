@@ -50,7 +50,7 @@ class UserController {
         const token = crypto.randomBytes(20).toString('Hex');
         await db.Link.create({
           token: token,
-          expiration: Date.now() + 10800000,
+          expiration: Date.now() + 259200000,
           cedula: cedula
         });
         const transporter = nodemailer.createTransport({
@@ -65,7 +65,7 @@ class UserController {
           to: `${formatoCorreos}`,
           subject: 'Solicitud de nueva contraseña en Il Consigliere',
           text:
-            `Usted ha solicitado cambiar su contraseña, por favor haga click en la siguiente dirección y llene los datos solicitados:\n\nhttps://il-consigliere.herokuapp.com/gUsuarios/cambioClave/${token}\n\nSe le recuerda que esta dirección expirará en 3 horas.\n\nSaludos,\nConsejo de Ingeniería en Computación.`
+            `Usted ha solicitado cambiar su contraseña, por favor haga click en la siguiente dirección y llene los datos solicitados:\n\nhttps://il-consigliere.herokuapp.com/gUsuarios/cambioClave/${token}\n\nSe le recuerda que esta dirección expirará en 3 días.\n\nSaludos,\nConsejo de Ingeniería en Computación.`
         };
         transporter.sendMail(mailOptions, (err, resp) => {
           if (err) {
@@ -96,14 +96,14 @@ class UserController {
         if (permisos.length === 0) {
           await db.Link.create({
             token: token,
-            expiration: Date.now() + 10800000,
+            expiration: Date.now() + 259200000,
             id_tipo_convocado: id_tipo_convocado
           });
         } else {
           for (let i = 0; i < permisos.length; i++) {
             await db.Link.create({
               token: token,
-              expiration: Date.now() + 10800000,
+              expiration: Date.now() + 259200000,
               id_tipo_convocado: id_tipo_convocado,
               id_permiso: permisos[i]
             });
@@ -121,7 +121,7 @@ class UserController {
           to: `${correo}`,
           subject: 'Crea tu cuenta en Il Consigliere',
           text:
-            `Los administradores del Consejo de Ingeniería en Computación del Campus Tecnológico Local de San José han solicitado que seas un participante en el Consejo de Unidad Desconcentrada, por favor haz click en la siguiente dirección y llena los datos solicitados:\n\n${process.env.PAGE_LINK}/gUsuarios/registro/${token}\n\nSe le recuerda que esta dirección expirará en 3 horas.\n\nSaludos,\nConsejo de Ingeniería en Computación.`
+            `Los administradores del Consejo de Ingeniería en Computación del Campus Tecnológico Local de San José han solicitado que seas un participante en el Consejo de Unidad Desconcentrada, por favor haz click en la siguiente dirección y llena los datos solicitados:\n\n${process.env.PAGE_LINK}/gUsuarios/registro/${token}\n\nSe le recuerda que esta dirección expirará en 3 días.\n\nSaludos,\nConsejo de Ingeniería en Computación.`
         };
         transporter.sendMail(mailOptions, (err, resp) => {
           if (err) {
