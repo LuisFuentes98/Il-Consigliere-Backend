@@ -26,6 +26,7 @@ function errorHandler(error){
 }
 
 async function makeDoc(data){
+    console.log(data)
     var content = fs.readFileSync(path.resolve(__dirname, 'Acta ICSJ-XX-202X.docx'), 'binary');
     var zip = new PizZip(content);
     var doc;
@@ -44,9 +45,10 @@ async function makeDoc(data){
     }
 
     var buf = doc.getZip().generate({type: 'nodebuffer'});
-    var filename = path.resolve(__dirname, `generated_acts/Acta-${Date.now.toString()}.docx`);
-    fs.writeFileSync(path, buf);
-    return path;
+    var filepath = path.join(__dirname, `../../generated-acts/`);
+    var filename = `Acta-${Date.now().toString()}.docx`
+    fs.writeFileSync(filepath+filename, buf);
+    return {filepath: filepath, filename: filename};
 }
 
 module.exports = {makeDoc};

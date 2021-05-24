@@ -4,6 +4,7 @@ const CouncilController = require('../controllers/CouncilController');
 const router = Router();
 
 router.post('/', CouncilController.store);
+router.post('/generarActa', CouncilController.generateAct);
 router.get('/', CouncilController.getCouncils);
 router.get('/anteriores', CouncilController.getCouncilsBefore);
 router.get('/anteriores/por_usuario/:cedula/:fecha', CouncilController.getCouncilsBeforeByUser);

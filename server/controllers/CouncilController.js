@@ -222,10 +222,12 @@ class CouncilController {
   }
 
   static async generateAct(req, res) {
+    console.log('here');
     try {
-      console.log(req.data);
-      var filename = makeDoc(req.data);
-      res.download(filename);
+      await makeDoc(req.body).then(data =>{
+        console.log(data.filepath, data.filename);
+        res.status(200).download(data.filepath, data.filename);
+      });
     } catch (error) {
       res.status(500).json({
         msg: 'Error interno del servidor'

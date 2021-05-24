@@ -7,6 +7,7 @@ import Navegacion from '../Navegacion/Navegacion';
 import auth from '../../helpers/auth';
 import DefaultComponent from '../../helpers/DefaultComponent';
 import { Loading } from '../../helpers/Loading';
+import { myAlert } from '../../helpers/alert';
 import './Consejos.css';
 
 export default class Consejos extends Component {
@@ -26,6 +27,7 @@ export default class Consejos extends Component {
 
     this.handleInputChange = this.handleInputChange.bind(this);
     this.checkedCouncil = this.checkedCouncil.bind(this);
+    this.generarActa = this.generarActa.bind(this);
   }
 
   componentDidMount() {
@@ -35,6 +37,7 @@ export default class Consejos extends Component {
           axios.get(`/consejo/${this.state.consecutivo}`)
             .then(res => {
               if (res.data.success) {
+                console.log(res.data.council);
                 this.setState({
                   isLoading: false,
                   consejo: res.data.council
@@ -169,8 +172,8 @@ export default class Consejos extends Component {
   getDiscussion(discussion, i) {
     if (!this.state.consejo.editable) {
       if (discussion.id_tipo_punto === 2) {
-        return <div>
-                  <li className='m-0 text-justify' key={i}>{discussion.asunto}</li>;
+        return <div  key={i}>
+                  <li className='m-0 text-justify'>{discussion.asunto}</li>;
                   {discussion.comentario && <p className='text-justify m-0 my-muted'>Comentario: {discussion.comentario}</p>}
                 </div>
       }
@@ -241,6 +244,50 @@ export default class Consejos extends Component {
     );
   }
 
+  generarActa() {
+    console.log('aqui');
+    try{
+      var data = {
+        consecutivo: this.state.consecutivo,
+        lugar: this.state.consejo.lugar,
+        fecha: this.state.consejo.fecha,
+        hora: this.state.consejo.hora,
+        tipoSesion: this.state.consejo.id_tipo_sesion,
+      }
+      console.log(data);
+      axios.post('/consejo/generarActa/', data, {responseType: 'blob'})
+      .then(res =>{
+        console.log(res.data);
+        return res;
+      }).then((res) =>{
+        const url = window.URL.createObjectURL(new Blob([res.data]));
+        const link = document.createElement('a');
+        link.href = url;
+        if (typeof window.navigator.msSaveBlob === 'function') {
+            window.navigator.msSaveBlob(
+                res.data,
+                'acta.docx'
+            );
+        } else {
+            link.setAttribute('download', 'acta.docx');
+            document.body.appendChild(link);
+            link.click();
+        }
+      }, (error) =>{
+        alert('error al descargar');
+      });
+    } catch(error){
+      myAlert('Atencion', 'Error al generar acta.','error');
+      console.log(error);
+    }
+  }
+
+  displayActa() {
+    return  <div className="form-group d-flex justify-content-left">
+              <button className="btn btn-outline-primary mt-4 editar-button" onClick={this.generarActa}>Generar Acta</button>
+            </div>
+  }
+
   render() {
     return (this.state.isLoading ? <Loading /> : this.state.redirect ? <Redirect to='/' /> : !this.state.encontrado ? <DefaultComponent /> :
       <>
@@ -277,6 +324,9 @@ export default class Consejos extends Component {
                     <button type="button" className="btn btn-outline-primary mt-4 editar-button" onClick={this.checkedCouncil}>Guardar Cambios</button>
                     <Link className="btn btn-outline-secondary mt-4 editar-button" to='/gConsejos'>Cancelar</Link>
                   </div>
+                }
+                {!this.state.consejo.editable &&
+                  this.displayActa()
                 }
               </div>
             </div>
