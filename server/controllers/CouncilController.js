@@ -1,6 +1,6 @@
 const db = require('../../database/models');
 const { Op } = require('sequelize');
-
+const { makeDoc } = require('../middleware/ActGenerator/docxGenerator');
 
 class CouncilController {
 
@@ -220,6 +220,20 @@ class CouncilController {
       });
     }
   }
+
+  static async generateAct(req, res) {
+    try {
+      console.log(req.data);
+      var filename = makeDoc(req.data);
+      res.download(filename);
+    } catch (error) {
+      res.status(500).json({
+        msg: 'Error interno del servidor'
+      })
+    }
+  }
+
 }
+
 
 module.exports = CouncilController;

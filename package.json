@@ -28,6 +28,7 @@
     "chai-http": "^4.3.0",
     "cors": "^2.8.5",
     "dependencies": "^0.0.1",
+    "docxtemplater": "^3.21.2",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "filepond": "^4.27.0",
@@ -40,6 +41,7 @@
     "nodemailer": "^6.5.0",
     "pg": "^8.5.1",
     "pg-hstore": "^2.3.3",
+    "pizzip": "^3.0.6",
     "popper.js": "^1.16.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
@@ -47,7 +49,8 @@
     "react-router-dom": "^5.2.0",
     "react-scripts": "^4.0.3",
     "sequelize": "^5.22.4",
-    "sequelize-cli": "^5.5.1"
+    "sequelize-cli": "^5.5.1",
+    "typescript": "^4.2.4"
   },
   "devDependencies": {
     "nodemon": "^2.0.7"
