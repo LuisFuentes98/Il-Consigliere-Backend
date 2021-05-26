@@ -31,7 +31,7 @@ class DiscussionController {
   static async getRequests(req, res) {
     try {
       await db.sequelize.transaction(async t => {
-        const discussions = await db.sequelize.query(`SELECT "Punto"."id_punto", "Punto"."asunto", "Usuario"."nombre", "Usuario"."apellido" FROM public."Punto" INNER JOIN public."Usuario" ON "Punto"."cedula" = "Usuario"."cedula" WHERE "Punto"."consecutivo" = '${req.params.consecutivo}' AND "Punto"."id_estado_punto" = 2`);
+        const discussions = await db.sequelize.query(`SELECT "Punto"."id_punto", "Punto"."asunto", "Punto"."comentario", "Punto"."id_tipo_punto", "Usuario"."nombre", "Usuario"."apellido" FROM public."Punto" INNER JOIN public."Usuario" ON "Punto"."cedula" = "Usuario"."cedula" WHERE "Punto"."consecutivo" = '${req.params.consecutivo}' AND "Punto"."id_estado_punto" = 2`);
         if (discussions[0].length > 0) {
           res.json({
             success: true,
@@ -117,12 +117,13 @@ class DiscussionController {
   }
 
   static async update(req, res) {
-    const {asunto, comentario} = req.body;
+    const {asunto, comentario, id_tipo_punto} = req.body;
     try {
       await db.sequelize.transaction(async t => {
         await db.Punto.update({
           asunto: asunto,
-          comentario: comentario
+          comentario: comentario,
+          id_tipo_punto: id_tipo_punto
         }, { where: { id_punto: req.params.id_punto } });
         res.json({
           success: true
@@ -136,10 +137,10 @@ class DiscussionController {
   }
 
   static async updateDiscussionsState(req, res) {
-    const { id_estado_punto, asunto, orden } = req.body;
+    const { id_estado_punto, asunto, comentario, orden } = req.body;
     try {
       await db.sequelize.transaction(async t => {
-        await db.Punto.update({ id_estado_punto: id_estado_punto, asunto: asunto, orden: orden }, { where: { id_punto: req.params.id_punto } });
+        await db.Punto.update({ id_estado_punto: id_estado_punto, asunto: asunto, comentario: comentario, orden: orden }, { where: { id_punto: req.params.id_punto } });
         res.json({
           success: true
         });

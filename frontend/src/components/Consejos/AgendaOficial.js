@@ -22,6 +22,7 @@ export default class AgendaOficial extends Component {
       redirect: false
     }
     this.handleInputChange = this.handleInputChange.bind(this);
+    this.handleCheckChange = this.handleCheckChange.bind(this);
     this.addDiscussion = this.addDiscussion.bind(this);
     this.deleteDiscussion = this.deleteDiscussion.bind(this);
     this.handleUpdate = this.handleUpdate.bind(this);
@@ -176,6 +177,32 @@ export default class AgendaOficial extends Component {
     myAlert("Listo", "Se han actualizado los puntos de agenda.", "success");
   }
 
+  handleCheckChange(e) {
+    let puntos = this.state.puntos;
+    let index = parseInt(e.target.name);
+    let punto = puntos[index];
+    punto.id_tipo_punto = parseInt(e.target.value);
+    this.setState({puntos: puntos});
+  }
+
+  getDiscussionTypeForChange(index) {
+    const info = [];
+    let punto = this.state.puntos[index];
+    for (let i = 0; i < this.state.tipoPunto.length; i++) {
+      let tipo_punto = this.state.tipoPunto[i];
+      info.push(
+        <div className="custom-control custom-radio mx-auto" key={i}>
+          <input type="radio" id={"radio"+punto.id_punto+i} name={index} value={tipo_punto.id_tipo_punto} onChange={this.handleCheckChange}
+            checked={punto.id_tipo_punto === tipo_punto.id_tipo_punto} className="custom-control-input" />
+          <label className="custom-control-label" htmlFor={"radio"+punto.id_punto+i}>
+            {tipo_punto.descripcion}
+          </label>
+        </div>
+      );
+    }
+    return info;
+  }
+
   getDiscussions() {
     const discussions = [];
     for (let i = 0; i < this.state.puntos.length; i++) {
@@ -190,6 +217,9 @@ export default class AgendaOficial extends Component {
               {punto.id_tipo_punto === 1 && <p className='text-justify m-0 my-muted'>*Este punto es votativo</p>}
               <p className='text-justify m-0'>Comentario:</p>
               <textarea className="form-control" onChange={e => this.handleDiscussionCommentChange(e, i)} value={punto.comentario} style={{ width: 'inherit' }} />
+              <div className="form-group d-flex align-items-center">
+                {this.getDiscussionTypeForChange(i)}
+              </div>
             </div>
             :
             <div>
@@ -207,6 +237,7 @@ export default class AgendaOficial extends Component {
               <div>
                 {this.state.puntos[i].editable ?
                   <div>
+                    <button className="fas fa-edit my-disabled fa-lg mx-4 my-button" type="button" onClick={(e) => this.disableEditable(e, i)} />
                     <button className="fas fa-check-circle my-icon fa-lg mx-4 my-button" type="button" onClick={(e) => this.acceptDiscussionChanges(e, i)} />
                   </div>
                   :
@@ -235,7 +266,7 @@ export default class AgendaOficial extends Component {
     auth.verifyToken()
       .then(value => {
         if (value) {
-          axios.post(`/punto/modificar/${this.state.puntos[i].id_punto}`, {asunto: this.state.puntos[i].asunto, comentario: this.state.puntos[i].comentario})
+          axios.post(`/punto/modificar/${this.state.puntos[i].id_punto}`, {asunto: this.state.puntos[i].asunto, comentario: this.state.puntos[i].comentario, id_tipo_punto: this.state.puntos[i].id_tipo_punto})
             .then(response => {
               this.disableEditable(e, i);
               myAlert("Listo", "Se ha modificado el punto de agenda con exito.", "success");
