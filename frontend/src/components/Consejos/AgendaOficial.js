@@ -82,12 +82,13 @@ export default class AgendaOficial extends Component {
       auth.verifyToken()
         .then(value => {
           if (value) {
-            axios.post('/punto', { asunto: this.state.punto, consecutivo: this.state.consecutivo, id_estado_punto: 1, cedula: auth.getInfo().cedula, orden: this.state.orden, id_tipo_punto: this.state.puntoSeleccionado })
+            axios.post('/punto', { asunto: this.state.punto, comentario: this.state.comentario, consecutivo: this.state.consecutivo, id_estado_punto: 1, cedula: auth.getInfo().cedula, orden: this.state.orden, id_tipo_punto: this.state.puntoSeleccionado })
               .then(res => {
                 if (res.data.success) {
                   this.getDiscussionsFromBD();
                   this.setState({
                     punto: '',
+                    comentario: '',
                     orden: this.state.orden + 1
                   });
                 }
@@ -338,9 +339,10 @@ export default class AgendaOficial extends Component {
         </div>
         <div className="form-group">
           <div className='d-flex align-items-center'>
-            <textarea placeholder='Punto de agenda (opcional)' name='punto' className="form-control mr-2" onChange={this.handleInputChange} value={this.state.punto} />
+            <input placeholder='Punto de agenda (opcional)' name='punto' className="form-control mr-2" onChange={this.handleInputChange} value={this.state.punto} />
             <button className="fas fa-plus-square my-icon fa-lg my-button" type="button" onClick={this.addDiscussion} ref={this.button} />
           </div>
+          <textarea placeholder='Comentario (opcional)' name='comentario' className="form-control mr-2" onChange={this.handleInputChange} value={this.state.comentario} />
           <div className="form-group d-flex align-items-center">
             {this.getDiscussionTypes()}
           </div>
