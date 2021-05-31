@@ -9,6 +9,7 @@ import DefaultComponent from '../../helpers/DefaultComponent';
 import { Loading } from '../../helpers/Loading';
 import { myAlert } from '../../helpers/alert';
 import './Consejos.css';
+var fileDownload = require('js-file-download');
 
 export default class Consejos extends Component {
 
@@ -255,24 +256,12 @@ export default class Consejos extends Component {
         tipoSesion: this.state.consejo.id_tipo_sesion,
       }
       console.log(data);
-      axios.post('/consejo/generarActa/', data, {responseType: 'blob'})
-      .then(res =>{
-        console.log(res.data);
-        return res;
-      }).then((res) =>{
-        const url = window.URL.createObjectURL(new Blob([res.data]));
-        const link = document.createElement('a');
-        link.href = url;
-        if (typeof window.navigator.msSaveBlob === 'function') {
-            window.navigator.msSaveBlob(
-                res.data,
-                'acta.docx'
-            );
-        } else {
-            link.setAttribute('download', 'acta.docx');
-            document.body.appendChild(link);
-            link.click();
-        }
+      axios.post('/consejo/generarActa/', data, {responseType: "blob"})
+      .then(response => {
+        const regExpFilename = /filename="(?<filename>.*)"/;
+        const filename = regExpFilename.exec(response.headers["content-disposition"])?.groups?.filename ?? null;
+        console.log(filename);
+        fileDownload(response.data, filename);
       }, (error) =>{
         alert('error al descargar');
       });

@@ -46,7 +46,7 @@ async function makeDoc(data){
 
     var buf = doc.getZip().generate({type: 'nodebuffer'});
     var filepath = path.join(__dirname, `../../generated-acts/`);
-    var filename = `Acta-${Date.now().toString()}.docx`
+    var filename = `Acta-${data.consecutivo}-${Date.now().toString()}.docx`
     fs.writeFileSync(filepath+filename, buf);
     return {filepath: filepath, filename: filename};
 }

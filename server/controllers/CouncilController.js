@@ -225,8 +225,13 @@ class CouncilController {
     console.log('here');
     try {
       await makeDoc(req.body).then(data =>{
-        console.log(data.filepath, data.filename);
-        res.status(200).download(data.filepath, data.filename);
+        res.download(data.filepath + data.filename, data.filename, (err) =>{
+          if(err){
+            res.status(500).send({
+              msg: "No se pudo descargar." + err,
+            });
+          }
+        });
       });
     } catch (error) {
       res.status(500).json({
