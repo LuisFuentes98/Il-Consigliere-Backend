@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { Redirect } from "react-router-dom";
 import axios from "axios";
 import auth from "../../helpers/auth";
 import $ from 'jquery';
@@ -22,6 +23,7 @@ export default class AgregarArchivo extends Component {
 
     this.handleSubmit = this.handleSubmit.bind(this);
     this.onFileChange = this.onFileChange.bind(this);
+    this.deleteAllFiles = this.deleteAllFiles.bind(this);
   }
 
   componentDidMount() {
@@ -72,12 +74,45 @@ export default class AgregarArchivo extends Component {
       console.log(this.state.archivos);
   }
 
+  deleteAllFiles(e){
+    e.preventDefault();
+    auth.verifyToken()
+      .then(value => {
+        if (value) {
+          let punto = this.props.punto;
+          axios.get(`/punto/getFiles/${this.props.consecutivo.split(' ').join('_')}/${punto.id_punto}`)
+            .then(res => {
+              if (res.data.success) {
+                if (res.data.files.length > 0) {
+                  res.data.files.forEach(file => {
+                    axios.delete(`/punto/deleteFile/${file.filename}`)
+                      .then(res =>{
+                          if (res.data.success) {
+                              console.log('file deleted');
+                          }else{
+                              console.log(res.data.msg);
+                          }
+                      });
+                  });
+                }
+                this.props.deleteDiscussion(this.props.punto.id_punto);
+              }
+            })
+            .catch((err) => console.log(err));
+        } else {
+          auth.logOut();
+        }
+      })
+      .catch((err) => console.log(err));
+  }
+
   render() {
     $("#"+this.props.modelName).on('shown.bs.modal', function () {
       $('#modal-input').focus();
     });
-    return <>
-        <button className="fas fa-paperclip my-icon fa-lg my-button" type="button" data-toggle="modal" data-target={"#"+this.props.modelName} />
+    return (this.state.redirect ? <Redirect to='/' /> :
+      <>
+        <button className="fas fa-paperclip my-icon fa-lg mx-2 my-button" type="button" data-toggle="modal" data-target={"#"+this.props.modelName} />
         <div className="modal fade" id={this.props.modelName} role="dialog">
           <div className="modal-dialog modal-dialog-centered" role="document">
             <div className="modal-content modal-border">
@@ -104,6 +139,7 @@ export default class AgregarArchivo extends Component {
             </div>
           </div>
         </div>
+        {this.props.editable && <button className="fas fa-trash-alt my-icon fa-lg mx-4 my-button" type="button" onClick={this.deleteAllFiles} />}
       </>
-  }
+    )}
 }

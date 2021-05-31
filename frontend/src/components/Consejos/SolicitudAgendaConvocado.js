@@ -145,8 +145,7 @@ export default class SolicitudAgendaConvocado extends Component {
           <div className='d-flex justify-content-between align-items-center my-2' key={i}>
             <li className='text-justify'>{solicitud.asunto}</li>
             <div>
-              <AgregarArchivo consecutivo={this.state.consecutivo} punto={solicitud} modelName={"subir_archivo"+i} updateParent={this.handleUpdate}/>
-              <button className="fas fa-trash-alt my-icon fa-lg mx-4 my-button" type="button" onClick={(e) => this.deleteRequest(e, solicitud.id_punto)} />
+              <AgregarArchivo consecutivo={this.state.consecutivo} punto={solicitud} editable={true} deleteDiscussion={this.deleteRequest} modelName={"subir_archivo"+i} updateParent={this.handleUpdate}/>
             </div>
           </div>
           {solicitud.id_tipo_punto === 1 && <p className='text-justify m-0 my-muted'>*Este punto es votativo</p>}
@@ -170,23 +169,11 @@ export default class SolicitudAgendaConvocado extends Component {
     }
   }
 
-  deleteRequest(e, id_punto) {
-    e.preventDefault();
-    auth.verifyToken()
-      .then(value => {
-        if (value) {
-          axios.delete(`/punto/${id_punto}`)
-            .then(res => {
-              if (res.data.success) {
-                this.getRequestsFromBD();
-              }
-            })
-            .catch((err) => console.log(err));
-        } else {
-          this.setState({
-            redirect: true
-          })
-          auth.logOut();
+  deleteRequest(id_punto) {
+    axios.delete(`/punto/${id_punto}`)
+      .then(res => {
+        if (res.data.success) {
+          this.getRequestsFromBD();
         }
       })
       .catch((err) => console.log(err));

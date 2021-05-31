@@ -105,26 +105,14 @@ export default class AgendaOficial extends Component {
     }
   }
 
-  deleteDiscussion(e, id_punto) {
-    e.preventDefault();
-    auth.verifyToken()
-      .then(value => {
-        if (value) {
-          axios.delete(`/punto/${id_punto}`)
-            .then(res => {
-              if (res.data.success) {
-                this.getDiscussionsFromBD();
-                this.setState({
-                  orden: this.state.orden - 1
-                });
-              }
-            })
-            .catch((err) => console.log(err));
-        } else {
+  deleteDiscussion(id_punto) {
+    axios.delete(`/punto/${id_punto}`)
+      .then(res => {
+        if (res.data.success) {
+          this.getDiscussionsFromBD();
           this.setState({
-            redirect: true
-          })
-          auth.logOut();
+            orden: this.state.orden - 1
+          });
         }
       })
       .catch((err) => console.log(err));
@@ -244,8 +232,7 @@ export default class AgendaOficial extends Component {
                   :
                   <div>
                     <button className="fas fa-edit my-icon fa-lg mx-4 my-button" type="button" onClick={(e) => this.makeEditable(e, i)} />
-                    <AgregarArchivo consecutivo={this.state.consecutivo} punto={this.state.puntos[i]} modelName={"subir_archivo"+i} updateParent={this.handleUpdate}/>
-                    <button className="fas fa-trash-alt my-icon fa-lg mx-4 my-button" type="button" onClick={(e) => this.deleteDiscussion(e, punto.id_punto)} />
+                    <AgregarArchivo consecutivo={this.state.consecutivo} punto={this.state.puntos[i]} editable={true} deleteDiscussion={this.deleteDiscussion} modelName={"subir_archivo"+i} updateParent={this.handleUpdate}/>
                   </div>
                 }
               </div>
