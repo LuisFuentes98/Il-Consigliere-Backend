@@ -9,6 +9,7 @@ import DefaultComponent from '../../helpers/DefaultComponent';
 import { Loading } from '../../helpers/Loading';
 import { myAlert } from '../../helpers/alert';
 import './Consejos.css';
+var fileDownload = require('js-file-download');
 
 export default class Consejos extends Component {
 
@@ -19,6 +20,7 @@ export default class Consejos extends Component {
       consecutivo: this.props.match.params.consecutivo,
       consejo: {},
       aprobados: [],
+      Convocados: [],
       punto: '',
       cedula: auth.getInfo().cedula,
       encontrado: true,
@@ -247,35 +249,45 @@ export default class Consejos extends Component {
   generarActa() {
     console.log('aqui');
     try{
-      var data = {
-        consecutivo: this.state.consecutivo,
-        lugar: this.state.consejo.lugar,
-        fecha: this.state.consejo.fecha,
-        hora: this.state.consejo.hora,
-        tipoSesion: this.state.consejo.id_tipo_sesion,
-      }
-      console.log(data);
-      axios.post('/consejo/generarActa/', data, {responseType: 'blob'})
-      .then(res =>{
-        console.log(res.data);
-        return res;
-      }).then((res) =>{
-        const url = window.URL.createObjectURL(new Blob([res.data]));
-        const link = document.createElement('a');
-        link.href = url;
-        if (typeof window.navigator.msSaveBlob === 'function') {
-            window.navigator.msSaveBlob(
-                res.data,
-                'acta.docx'
-            );
-        } else {
-            link.setAttribute('download', 'acta.docx');
-            document.body.appendChild(link);
-            link.click();
+
+      axios.get(`/convocado/nombres_usuario/${this.state.consecutivo}`)
+      .then(resp => {
+        if (resp.data.success) {
+          var convs = []
+          for (let i = 0; i < resp.data.convocados.length; i++) {
+            let convocado = resp.data.convocados[i];
+            convs.push(convocado);
+          }
+          var aprob = this.state.aprobados;
+          for (let i = 0; i < aprob.length; i++) {
+            aprob[i]['orden'] = i+1;
+          } 
+          var data = {
+            consecutivo: this.state.consecutivo,
+            campus: this.state.consejo.campus,
+            carrera: this.state.consejo.carrera,
+            fecha: this.state.consejo.fecha,
+            hora: this.state.consejo.hora,
+            tipoSesion: 'Ordinaria',
+            institucion: this.state.consejo.institucion,
+            lugar: this.state.consejo.lugar,
+            nombre_consejo: this.state.consejo.nombre_consejo,
+            puntos: aprob,
+            Convocados:  convs
+          }
+          axios.post('/consejo/generarActa/', data, {responseType: "blob"})
+          .then(response => {
+            const regExpFilename = /filename="(?<filename>.*)"/;
+            const filename = regExpFilename.exec(response.headers["content-disposition"])?.groups?.filename ?? null;
+            console.log(filename);
+            fileDownload(response.data, filename);
+          }, (error) =>{
+            alert('error al descargar' + error);
+          });
+
         }
-      }, (error) =>{
-        alert('error al descargar');
-      });
+      })
+      .catch((err) => console.log(err));
     } catch(error){
       myAlert('Atencion', 'Error al generar acta.','error');
       console.log(error);
@@ -289,6 +301,7 @@ export default class Consejos extends Component {
   }
 
   render() {
+    console.log(this.state.consejo.editable);
     return (this.state.isLoading ? <Loading /> : this.state.redirect ? <Redirect to='/' /> : !this.state.encontrado ? <DefaultComponent /> :
       <>
         <Navegacion />
