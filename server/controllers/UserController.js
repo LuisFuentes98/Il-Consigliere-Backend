@@ -65,7 +65,7 @@ class UserController {
           to: `${formatoCorreos}`,
           subject: 'Solicitud de nueva contraseña en Il Consigliere',
           text:
-            `Usted ha solicitado cambiar su contraseña, por favor haga click en la siguiente dirección y llene los datos solicitados:\n\nhttps://il-consigliere.herokuapp.com/gUsuarios/cambioClave/${token}\n\nSe le recuerda que esta dirección expirará en 3 días.\n\nSaludos,\nConsejo de Ingeniería en Computación.`
+            `Usted ha solicitado cambiar su contraseña, por favor haga click en la siguiente dirección y llene los datos solicitados:\n\n${process.env.PAGE_LINK}/gUsuarios/cambioClave/${token}\n\nSe le recuerda que esta dirección expirará en 3 días.\n\nSaludos,\nConsejo de Ingeniería en Computación.`
         };
         transporter.sendMail(mailOptions, (err, resp) => {
           if (err) {

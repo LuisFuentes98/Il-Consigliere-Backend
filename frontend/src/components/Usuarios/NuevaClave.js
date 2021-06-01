@@ -12,14 +12,15 @@ export default class NuevaClave extends Component {
       nueva: '',
       confirmacion: '',
       invalido: true,
-      isLoading: true
+      isLoading: true      
     }
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   componentDidMount() {
-    axios.get(`/usuario/validar_recuperacion/${this.props.match.params.token}`)
+    const token = this.props.match.params.token;
+    axios.get(`/usuario/validar_recuperacion/${token}`)
       .then(res => {
         if (res.data.success) {
           this.setState({
