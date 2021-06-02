@@ -50,9 +50,6 @@ export default class Consejos extends Component {
                         puntos: resp.data.discussions,
                         archivosVisibles: archivosVisibles
                       });
-                      for (let i = 0; i < this.state.puntos.length; i++) {
-                        this.getDiscussionFiles(this.state.puntos[i], i);
-                      }
                     }
                   })
                   .catch((err) => console.log(err));

@@ -72,6 +72,9 @@ export default class RegistroConsejos extends Component {
   handleInputChange(e) {
     let value = e.target.value;
     let name = e.target.name;
+    if(name === "consecutivo"){
+      value = value.toUpperCase();
+    }
     this.setState({
       [name]: value
     });
