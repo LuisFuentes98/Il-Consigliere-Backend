@@ -2,6 +2,9 @@ const db = require('../../database/models');
 const {storage} = require('../middleware/GcloudConfig');
 var multer = require('multer')
 var upload = multer().array('archivos')
+//const fs = require('fs');
+const fs = require('fs-extra');
+const e = require('express');
 
 class DiscussionController {
 
@@ -215,6 +218,7 @@ class DiscussionController {
     }
   }
 
+  /*
   static async getDiscussionFiles(req, res) {
     try {
       let bucketName = 'il-consigliere-files';
@@ -297,7 +301,109 @@ class DiscussionController {
       });
     }
   }
+  */
+  static async getDiscussionFiles(req, res) {
+    try {
+      var filepath = `server/dataStorage/Consejos/${req.params.consecutivo}/${req.params.idpunto}`;
+      fs.ensureDirSync(filepath);
+      fs.readdir(filepath, (err, files) => {
+        if(err){
+          console.log(err);
+          res.status(500).json({
+            success: false,
+            msg: err
+          });
+        }else{
+          let fileList = []
+          files.forEach(file => {
+            console.log(file);
+            fileList.push({
+              filename: file,
+              type: 'txt',
+            });
+          });
+          res.json({
+            success: true,
+            files: fileList
+          })
+        }
+      });
+    }catch(err){
+      console.log(err);
+    }
+  }
 
+  static async uploadFile(req, res, next) {
+    
+    try {
+      async function uploadFile(file, folder) {
+        let newFolder = 'server/dataStorage/Consejos/'+folder.replace(/ /g,"_") + '/' + Date.now() + '-' + file.originalname;
+        console.log(newFolder);
+        fs.writeFile(newFolder, file, function (err) {
+          if (err) throw err;
+        });
+      }
+      upload(req, res, function (err) {
+        let files = req.files
+        for (let file in files) {
+          uploadFile(files[file], req.body.folder)
+        }
+        if (err) {
+          return res.end("Error uploading file." + err);
+        }
+        res.end("File is uploaded");
+      });
+    } catch (err) {
+      res.json({ "err": err });
+    }
+    
+    
+    
+    try {
+
+    }catch(err){
+      console.log(err);
+    }
+  }
+
+  static async deletefile(req, res){
+    var filepath = `server/dataStorage/Consejos/${req.params.consecutivo}/${req.params.idpunto}/${req.params.filename}`;
+    console.log(filepath);
+    try {
+      await fs.remove(filepath)
+      console.log('success!');
+      res.json({
+        success: true
+      });
+    } catch (err) {
+      console.log(err);
+      res.status(500).json({
+        success: false,
+        msg: err
+      });
+    }
+  }
+
+  static async getFile(req, res){
+    var filepath = `server/dataStorage/Consejos/${req.params.consecutivo}/${req.params.idpunto}/`;
+    var filename = req.params.filename;
+    console.log(filepath, filename);
+    try {
+      res.download(filepath+filename, filename, (err)=>{
+        if(err){
+          res.status(500).send({
+            msg: "No se pudo descargar." + err,
+          });
+        }
+      });
+    } catch (err) {
+      console.log(err);
+      res.status(500).json({
+        success: false,
+        msg: err
+      });
+    }
+  }
 }
 
 module.exports = DiscussionController;
