@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
+var fileDownload = require('js-file-download');
 
 class ArchivosDePunto extends Component {
     constructor(props) {
@@ -34,9 +35,21 @@ class ArchivosDePunto extends Component {
     }
 
     downloadFile(filename) {
+        /*
         console.log("opening: ", filename);
         const newWindow = window.open("https://storage.googleapis.com/il-consigliere-files/"+filename, '_blank', 'noopener,noreferrer')
         if(newWindow) newWindow.opener = null
+        */
+        console.log("opening: ", filename);
+        axios.get(`/punto/download/${this.props.consecutivo.replace(/ /g,"_")}/${this.props.punto.id_punto}/${filename.replace(/ /g,"")}/`, {responseType: "blob"})
+            .then(response => {
+                const regExpFilename = /filename="(?<filename>.*)"/;
+                const filename = regExpFilename.exec(response.headers["content-disposition"])?.groups?.filename ?? null;
+                console.log(filename);
+                fileDownload(response.data, filename);
+            }, (error) =>{
+                alert('error al descargar' + error);
+            });
     }
 
     deleteFile(file) {
