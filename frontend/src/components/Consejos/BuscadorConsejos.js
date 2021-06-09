@@ -20,6 +20,9 @@ export default class BuscadorConsejos extends Component {
   handleInputChange(e) {
     let value = e.target.value;
     let name = e.target.name;
+    if(name === "consecutivo"){
+      value = value.toUpperCase();
+    }
     this.setState({
       [name]: value
     });
@@ -30,39 +33,29 @@ export default class BuscadorConsejos extends Component {
     auth.verifyToken()
       .then(value => {
         if (value) {
-          if (this.props.admin) {
-            axios.get(`/consejo/${this.state.consecutivo}`)
+          axios.get(`/consejo/${this.state.consecutivo}`)
               .then(res => {
                 if (res.data.success) {
-                  this.setState({
-                    ruta: `/gConsejos/${this.state.consecutivo}`,
-                    encontrado: true
-                  });
+                  if(this.props.edit === true && Date.parse(res.data.council.fecha) > Date.now()){
+                    this.setState({
+                      ruta: `/gConsejos/editar/${this.state.consecutivo}`,
+                      encontrado: true
+                    });
+                  } else{
+                    this.setState({
+                      ruta: `/consejos/${this.state.consecutivo}`,
+                      encontrado: true
+                    });
+                  }
                 } else {
-                  myAlert('No se encontró el consejo.', `Revisa el número de consecutivo, ya que no se encontraron datos de ${this.state.consecutivo}.`, 'warning');
+                  let consecutivo = this.state.consecutivo;
+                  myAlert('No se encontró el consejo.', `Revisa el número de consecutivo, ya que no se encontraron datos de ${consecutivo}.`, 'warning');
                   this.setState({
                     consecutivo: ''
                   });
                 }
               })
               .catch((err) => console.log(err));
-          } else {
-            axios.get(`/consejo/convocado/${this.state.consecutivo}/${auth.getInfo().cedula}`)
-              .then(res => {
-                if (res.data.success) {
-                  this.setState({
-                    ruta: `/consejos/${this.state.consecutivo}`,
-                    encontrado: true
-                  });
-                } else {
-                  myAlert('No se encontró el consejo.', `Revisa el número de consecutivo, ya que no se encontraron datos de ${this.state.consecutivo}.`, 'warning');
-                  this.setState({
-                    consecutivo: ''
-                  });
-                }
-              })
-              .catch((err) => console.log(err));
-          }
         } else {
           this.setState({
             redirect: true

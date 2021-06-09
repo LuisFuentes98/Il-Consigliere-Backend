@@ -59,7 +59,7 @@ export default class Navegacion extends Component {
                   <NavLink className="nav-link text" activeClassName="active" to="/consejos">Mis Consejos</NavLink>
                 </li>
                 <li className="nav-item">
-                  <NavLink className="nav-link text" activeClassName="active" exact to="/proximosconsejos" onClick={this.verifyToken}>Próximos Consejos</NavLink>
+                  <NavLink className="nav-link text" activeClassName="active" exact to="/proximosconsejos" onClick={this.verifyToken}>Todos los Consejos</NavLink>
                 </li>
                 {this.state.gestUsuario &&
                   <li className="nav-item">
