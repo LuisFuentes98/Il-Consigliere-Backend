@@ -31,7 +31,7 @@ export default class Inicio extends Component {
   }
 
   render() {
-    return (this.state.redirect ? <Redirect to='/consejos' /> :
+    return (this.state.redirect ? <Redirect to='/' /> :
       <>
         <Navegacion />
         <div className="row m-0 my-row">

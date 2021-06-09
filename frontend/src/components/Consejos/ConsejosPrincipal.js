@@ -25,19 +25,19 @@ export default class ConsejosPrincipal extends Component {
   }
 
   getAllCouncils() {
-    axios.get('/consejo')
-    .then(res => {
-      if (res.data.success) {
-        this.setState({
-          consejos: res.data.councils
-        });
-      } else {
-        this.setState({
-          consejos: []
-        });
-      }
-    })
-    .catch((err) => console.log(err));
+        axios.get('/consejo')
+        .then(res => {
+          if (res.data.success) {
+            this.setState({
+              consejos: res.data.councils
+            });
+          } else {
+            this.setState({
+              consejos: []
+            });
+          }
+        })
+        .catch((err) => console.log(err));
   }
 
   getCouncils() {
@@ -59,6 +59,7 @@ export default class ConsejosPrincipal extends Component {
             <div className="card-body p-2">
               <div className='d-flex justify-content-between align-items-center'>
                 <p className="card-title m-0">{consecutivo}</p>
+                
                 <Link to={`/iConsejos/${consecutivo}`}><i className="far fa-eye fa-lg ml-2" style={{ color: "navy" }}></i></Link>
               </div>
               <p className='m-0'>{institucion}</p>

@@ -41,7 +41,7 @@ function App() {
         <ProtectedRoute path='/proximosconsejos' component={VisualizarConsejosUsuario} />
         <ProtectedRoute path='/cuenta' component={Cuenta} />
         <Route path='/acceso' component={Acceso} />
-        <Route path='/iConsejos' component={ConsejosPrincipal} />
+        <Route exact path='/iConsejos' component={ConsejosPrincipal} />
         <Route path='/iConsejos/:consecutivo' component={ConsejoAnonimo} />
         <Route exact path='/' component={Inicio} />
         <Route path='*' component={DefaultComponent} />
