@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
 import axios from 'axios';
-import auth from '../../helpers/auth';
 
 export default class Convocados extends Component {
   constructor(props) {

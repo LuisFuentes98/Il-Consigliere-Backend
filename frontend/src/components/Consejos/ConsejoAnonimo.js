@@ -9,7 +9,6 @@ import { Loading } from '../../helpers/Loading';
 import roles from '../../helpers/roles';
 import { getTodaysDate } from '../../helpers/dates';
 import './Consejos.css';
-import SolicitudAgendaConvocado from './SolicitudAgendaConvocado';
 import ArchivosDePunto from './ArchivosDePunto';
 
 export default class ConsejoAnonimo extends Component {
