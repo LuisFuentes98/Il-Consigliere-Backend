@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { Redirect, Link } from 'react-router-dom';
 import axios from 'axios';
-import Convocados from './Convocados';
 import Navegacion from '../Navegacion/Navegacion';
 import auth from '../../helpers/auth';
 import DefaultComponent from '../../helpers/DefaultComponent';
@@ -9,7 +8,6 @@ import { Loading } from '../../helpers/Loading';
 import roles from '../../helpers/roles';
 import { getTodaysDate } from '../../helpers/dates';
 import './Consejos.css';
-import SolicitudAgendaConvocado from './SolicitudAgendaConvocado';
 import ArchivosDePunto from './ArchivosDePunto';
 
 export default class ConsejoAnonimo extends Component {
@@ -29,9 +27,6 @@ export default class ConsejoAnonimo extends Component {
   }
 
   componentDidMount() {
-    auth.verifyToken()
-      .then(value => {
-        if (value) {
           axios.get(`/consejo/${this.state.consecutivo}`)
             .then(res => {
               if (res.data.success) {
@@ -64,14 +59,6 @@ export default class ConsejoAnonimo extends Component {
               }
             })
             .catch((err) => console.log(err));
-        } else {
-          this.setState({
-            redirect: true
-          })
-          auth.logOut();
-        }
-      })
-      .catch((err) => console.log(err));
   }
 
   getDiscussions() {
@@ -105,7 +92,7 @@ export default class ConsejoAnonimo extends Component {
           <div className="col-md-10 m-auto">
             <div className="card border-primary consejo-card">
               <div className="card-body">
-                <Link to='/consejos'><i className="fas fa-times fa-lg m-2 ubicar-salida" style={{ color: 'navy' }}></i></Link>
+                <Link to='/iConsejos'><i className="fas fa-times fa-lg m-2 ubicar-salida" style={{ color: 'navy' }}></i></Link>
                 <div className='todo-registro'>
                   <div className='registro-container izq'>
                     <p className="card-title text-center text-uppercase m-0">{this.state.consejo.institucion}</p>
@@ -118,7 +105,7 @@ export default class ConsejoAnonimo extends Component {
                     <p className='text-center m-0'>HORA: {this.state.consejo.hora}</p>
                     <p className='text-center m-0'>LUGAR: {this.state.consejo.lugar}</p>
                     <hr />
-                    <Convocados consecutivo={this.state.consecutivo} />
+                    
                   </div>
                   <div className='registro-container der'>
                     <p>Puntos de Agenda:</p>
@@ -128,9 +115,7 @@ export default class ConsejoAnonimo extends Component {
                         {this.getDiscussions()}
                       </ol>
                     </div>
-                    {!this.state.isCouncilModifier && this.state.consejo.fecha >= date && this.state.consejo.limite_solicitud >= date &&
-                      <SolicitudAgendaConvocado consecutivo={this.state.consecutivo} />
-                    }
+
                   </div>
                 </div>
               </div>
