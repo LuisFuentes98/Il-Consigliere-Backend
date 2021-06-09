@@ -38,6 +38,15 @@ export default class ConsejosPrincipal extends Component {
           }
         })
         .catch((err) => console.log(err));
+        axios.get('/consejo/anteriores')
+            .then(res => {
+              if (res.data.success) {
+                this.setState({
+                  anteriores: res.data.councils
+                });
+              }
+            })
+            .catch((err) => console.log(err));
   }
 
   getCouncils() {
@@ -78,18 +87,67 @@ export default class ConsejosPrincipal extends Component {
     return councils;
   }
 
+  previousCouncilList() {
+    const councils = [];
+    for (let i = 0; i < this.state.anteriores.length; i++) {
+      let consejo = this.state.anteriores[i];
+      councils.push(
+        <div className="col-md-4" key={i}>
+          <div className="card border-primary mb-3">
+            <div className="card-body p-2">
+              <div className='d-flex justify-content-between align-items-center'>
+                <p className="card-title m-0">{consejo.consecutivo}</p>
+                <div className='d-flex justify-content-between align-items-center'>
+                  <Link to={`/iConsejos/${consejo.consecutivo}`}><i className="far fa-eye fa-lg ml-2" style={{ color: "navy" }}></i></Link>
+                </div>
+              </div>
+              <p className='m-0'>{consejo.institucion}</p>
+              <p className='m-0'>{consejo.campus}</p>
+              <p className='m-0'>{consejo.carrera}</p>
+              <p className='m-0'>{consejo.nombre_consejo}</p>
+              <p className='m-0'>Sesión {consejo.id_tipo_sesion === 1 ? 'Ordinaria' : consejo.id_tipo_sesion === 2 ? 'Extraordinaria' : 'Consulta Formal'} {consejo.consecutivo}</p>
+              <p className='m-0'>Lugar: {consejo.lugar}</p>
+              <p className='m-0'>Fecha: {consejo.fecha}</p>
+              <p className='m-0'>Hora: {consejo.hora}</p>
+            </div>
+          </div>
+        </div>
+      );
+    }
+    return councils;
+  }
+  
   render() {
     return (this.state.redirect ? <Redirect to='/' /> :
       <>
         <Navegacion />
         <div className='container'>
-          {this.state.consejos.length > 0 ? <p className='text-center lead'>Próximos Consejos</p> : <p className='my-muted text-center'>No hay próximos consejos para mostrar.</p>}
+          {this.state.consejos.length === 0 ? <p className='my-muted text-center'>No hay próximos consejos para mostrar</p> :
+            <>
+              <h4>Próximos Consejos</h4>
+              <hr />
+            </>
+          }
         </div>
         <div className="row m-0 mt-4">
           {this.getCouncils()}
         </div>
-          <BuscadorConsejos />
+        <div className='container'>
+          {this.state.anteriores.length > 0 &&
+            <>
+              <h4>Consejos anteriores</h4>
+              <hr />
+            </>
+          }
+        </div>
+        <div className="row m-0 mt-4">
+          {this.previousCouncilList()}
+        </div>
+        {this.state.anteriores.length > 0 &&
+          <BuscadorConsejos edit={true}/>
+        }
       </>
     );
   }
 }
+
