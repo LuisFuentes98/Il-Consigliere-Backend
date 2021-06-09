@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Redirect, Link } from 'react-router-dom';
 import axios from 'axios';
+import Convocados from './Convocados';
 import Navegacion from '../Navegacion/Navegacion';
 import auth from '../../helpers/auth';
 import DefaultComponent from '../../helpers/DefaultComponent';
@@ -8,6 +9,7 @@ import { Loading } from '../../helpers/Loading';
 import roles from '../../helpers/roles';
 import { getTodaysDate } from '../../helpers/dates';
 import './Consejos.css';
+import SolicitudAgendaConvocado from './SolicitudAgendaConvocado';
 import ArchivosDePunto from './ArchivosDePunto';
 
 export default class ConsejoAnonimo extends Component {
@@ -105,7 +107,7 @@ export default class ConsejoAnonimo extends Component {
                     <p className='text-center m-0'>HORA: {this.state.consejo.hora}</p>
                     <p className='text-center m-0'>LUGAR: {this.state.consejo.lugar}</p>
                     <hr />
-                    
+                    <Convocados consecutivo={this.state.consecutivo} />
                   </div>
                   <div className='registro-container der'>
                     <p>Puntos de Agenda:</p>

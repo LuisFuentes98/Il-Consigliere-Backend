@@ -16,9 +16,6 @@ export default class Convocados extends Component {
   }
 
   componentDidMount() {
-    auth.verifyToken()
-      .then(value => {
-        if (value) {
           axios.get(`/convocado/nombres_usuario/${this.state.consecutivo}`)
             .then(resp => {
               if (resp.data.success) {
@@ -43,14 +40,6 @@ export default class Convocados extends Component {
               }
             })
             .catch((err) => console.log(err));
-        } else {
-          this.setState({
-            redirect: true
-          })
-          auth.logOut();
-        }
-      })
-      .catch((err) => console.log(err));
   }
 
   getTeachers() {
