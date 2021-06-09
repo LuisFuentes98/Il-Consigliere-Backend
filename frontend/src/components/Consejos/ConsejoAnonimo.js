@@ -117,7 +117,6 @@ export default class ConsejoAnonimo extends Component {
                         {this.getDiscussions()}
                       </ol>
                     </div>
-
                   </div>
                 </div>
               </div>
