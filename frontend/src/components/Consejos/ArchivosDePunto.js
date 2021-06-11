@@ -53,7 +53,7 @@ class ArchivosDePunto extends Component {
     }
 
     deleteFile(file) {
-        axios.delete(`/punto/deleteFile/${file.filename}`)
+        axios.get(`/punto/deleteFile/${this.props.consecutivo.replace(/ /g,"_")}/${this.props.punto.id_punto}/${filename.replace(/ /g,"")}/`)
         .then(res =>{
             if (res.data.success) {
                 console.log('file deleted')
