@@ -218,6 +218,7 @@ class DiscussionController {
     }
   }
 
+  //GOOGLE CLOUD SERVICES FILE MANAGEMENT
   /*
   static async getDiscussionFiles(req, res) {
     try {
@@ -302,6 +303,9 @@ class DiscussionController {
     }
   }
   */
+
+  //LOCAL FILE MANAGEMENT
+
   static async getDiscussionFiles(req, res) {
     try {
       var filepath = `server/dataStorage/Consejos/${req.params.consecutivo}/${req.params.idpunto}`;
