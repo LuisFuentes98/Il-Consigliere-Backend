@@ -60,7 +60,7 @@ class ArchivosDePunto extends Component {
                 let files = this.state.archivos;
                 let newFiles = [];
                 for(let i=0; i<files.length; i++){
-                    if(files[i]!==file){
+                    if(files[i]!==filename){
                         newFiles.push(files[i]);
                     }
                 }
