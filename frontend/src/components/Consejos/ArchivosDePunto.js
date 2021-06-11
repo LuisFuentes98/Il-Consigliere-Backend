@@ -52,7 +52,7 @@ class ArchivosDePunto extends Component {
             });
     }
 
-    deleteFile(file) {
+    deleteFile(filename) {
         axios.get(`/punto/deleteFile/${this.props.consecutivo.replace(/ /g,"_")}/${this.props.punto.id_punto}/${filename.replace(/ /g,"")}/`)
         .then(res =>{
             if (res.data.success) {
