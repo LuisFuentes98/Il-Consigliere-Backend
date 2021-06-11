@@ -343,7 +343,7 @@ class DiscussionController {
       async function uploadFile(file, folder) {
         let newFolder = 'server/dataStorage/Consejos/'+folder.replace(/ /g,"_") + '/' + Date.now() + '-' + file.originalname;
         console.log(newFolder);
-        fs.writeFile(newFolder, file, function (err) {
+        fs.writeFile(newFolder, file.buffer, function (err) {
           if (err) throw err;
         });
       }
@@ -393,7 +393,7 @@ class DiscussionController {
     var filename = req.params.filename;
     console.log(filepath, filename);
     try {
-      res.download(filepath+filename, filename, (err)=>{
+      res.download(filepath+filename, (err)=>{
         if(err){
           res.status(500).send({
             msg: "No se pudo descargar." + err,

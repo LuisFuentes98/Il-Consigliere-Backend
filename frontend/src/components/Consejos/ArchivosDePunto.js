@@ -20,17 +20,17 @@ class ArchivosDePunto extends Component {
         let punto = this.props.punto;
         const files = [];
         axios.get(`/punto/getFiles/${this.props.consecutivo.split(' ').join('_')}/${punto.id_punto}`)
-          .then(res => {
-            if (res.data.success) {
-              if (res.data.files.length > 0) {
-                for (let i = 0; i < res.data.files.length; i++) {
-                  files.push(res.data.files[i])
-                };
-              }
-              this.setState({ archivos: files });
-            }
-          })
-          .catch((err) => console.log(err));
+            .then(res => {
+                if (res.data.success) {
+                if (res.data.files.length > 0) {
+                    for (let i = 0; i < res.data.files.length; i++) {
+                    files.push(res.data.files[i])
+                    };
+                }
+                this.setState({ archivos: files });
+                }
+            })
+            .catch((err) => console.log(err));
         return true;
     }
 
@@ -52,15 +52,15 @@ class ArchivosDePunto extends Component {
             });
     }
 
-    deleteFile(filename) {
-        axios.get(`/punto/deleteFile/${this.props.consecutivo.replace(/ /g,"_")}/${this.props.punto.id_punto}/${filename.replace(/ /g,"")}/`)
+    deleteFile(file) {
+        axios.get(`/punto/deleteFile/${this.props.consecutivo.replace(/ /g,"_")}/${this.props.punto.id_punto}/${file.filename.replace(/ /g,"")}/`)
         .then(res =>{
             if (res.data.success) {
                 console.log('file deleted')
                 let files = this.state.archivos;
                 let newFiles = [];
                 for(let i=0; i<files.length; i++){
-                    if(files[i]!==filename){
+                    if(files[i]!==file){
                         newFiles.push(files[i]);
                     }
                 }
