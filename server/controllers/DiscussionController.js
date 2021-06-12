@@ -341,7 +341,7 @@ class DiscussionController {
     
     try {
       async function uploadFile(file, folder) {
-        let newFolder = 'server/dataStorage/Consejos/'+folder.replace(/ /g,"_") + '/' + Date.now() + '-' + file.originalname;
+        let newFolder = 'server/dataStorage/Consejos/'+folder.replace(/ /g,"_") + '/' + Date.now() + '-' + file.originalname.replace(/ /g,"_");
         console.log(newFolder);
         fs.writeFile(newFolder, file.buffer, function (err) {
           if (err) throw err;
