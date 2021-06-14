@@ -57,10 +57,22 @@ export default class BuscadorConsejos extends Component {
               })
               .catch((err) => console.log(err));
         } else {
-          this.setState({
-            redirect: true
-          })
-          auth.logOut();
+          axios.get(`/consejo/${this.state.consecutivo}`)
+              .then(res => {
+                if (res.data.success) {
+                  this.setState({
+                    ruta: `/iConsejos/${this.state.consecutivo}`,
+                    encontrado: true
+                  });
+                } else {
+                  let consecutivo = this.state.consecutivo;
+                  myAlert('No se encontró el consejo.', `Revisa el número de consecutivo, ya que no se encontraron datos de ${consecutivo}.`, 'warning');
+                  this.setState({
+                    consecutivo: ''
+                  });
+                }
+              })
+              .catch((err) => console.log(err));
         }
       })
       .catch((err) => console.log(err));
