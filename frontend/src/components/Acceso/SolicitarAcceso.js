@@ -63,7 +63,7 @@ export default class SolicitarAcceso extends Component {
             <>
                 <div className='d-flex justify-content-center mt-2'>
                     <button type='button' className="my-link text-center" style={{backgroundColor: 'transparent'}} data-toggle="modal" data-target="#SolAcceso">
-                        Solicitar Acesso al sistema.
+                        Solicitar Acceso al sistema.
                     </button>
                 </div>
                 <div className="modal fade" id="SolAcceso" role="dialog">

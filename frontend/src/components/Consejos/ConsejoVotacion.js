@@ -203,19 +203,27 @@ export default class Consejos extends Component {
         <div className='my-2' key={i}>
           <li className='m-0 text-justify'>{discussion.asunto}</li>
           {discussion.comentario && <p className='text-justify m-0 my-muted'>Comentario: {discussion.comentario}</p>}
-          <div className='d-flex justify-content-between align-items-center'>
-            <div className='d-flex align-items-center'>
-              <input type="text" required maxLength="4" name="favor"
-                placeholder="a favor" autoComplete="off" className="form-control votacion-input"
-                onChange={(e) => this.handleInputChange(e, i)} value={discussion.favor === null ? '' : discussion.favor} />
-              <input type="text" required maxLength="4" name="contra"
-                placeholder="en contra" autoComplete="off" className="form-control votacion-input mx-2"
-                onChange={(e) => this.handleInputChange(e, i)} value={discussion.contra === null ? '' : discussion.contra} />
-              <input type="text" required maxLength="4" name="abstencion"
-                placeholder="abstenciones" autoComplete="off" className="form-control votacion-input"
-                onChange={(e) => this.handleInputChange(e, i)} value={discussion.abstencion === null ? '' : discussion.abstencion} />
+          <div className='justify-content-between align-items-center flex-fill'>
+            <div className='d-flex flex-column justify-content-center align-items-center '>
+              <div className='d-flex flex-row'>
+                <label className='p-2  flex-fill'> A favor: </label>
+                <label className='p-2 mx-2  flex-fill'> En Contra: </label>
+                <label className='p-2  flex-fill'> Abstenciones: </label>
+              </div>
+              <div className='d-flex flex-row'>
+                <input type="text" required maxLength="4" name="favor"
+                  placeholder="a favor" autoComplete="off" className="form-control votacion-input"
+                  onChange={(e) => this.handleInputChange(e, i)} value={discussion.favor === null ? '' : discussion.favor} />
+                <input type="text" required maxLength="4" name="contra"
+                  placeholder="en contra" autoComplete="off" className="form-control votacion-input mx-2"
+                  onChange={(e) => this.handleInputChange(e, i)} value={discussion.contra === null ? '' : discussion.contra} />
+                <input type="text" required maxLength="4" name="abstencion"
+                  placeholder="abstenciones" autoComplete="off" className="form-control votacion-input"
+                  onChange={(e) => this.handleInputChange(e, i)} value={discussion.abstencion === null ? '' : discussion.abstencion} />
+                <button className="far fa-check-circle my-icon fa-lg my-button mx-1" type="button" onClick={(e) => this.saveChanges(e, i)} />
+              </div>
             </div>
-            <button className="far fa-check-circle my-icon fa-lg my-button mx-1" type="button" onClick={(e) => this.saveChanges(e, i)} />
+            
           </div>
         </div>
       );
