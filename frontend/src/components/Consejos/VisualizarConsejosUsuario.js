@@ -154,7 +154,7 @@ export default class VisualizarConsejosUsuario extends Component {
           {this.previousCouncilList()}
         </div>
         {this.state.anteriores.length > 0 &&
-          <BuscadorConsejos edit={true}/>
+          <BuscadorConsejos edit={false}/>
         }
       </>
     );

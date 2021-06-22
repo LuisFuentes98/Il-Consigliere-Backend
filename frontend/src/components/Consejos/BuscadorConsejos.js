@@ -42,10 +42,17 @@ export default class BuscadorConsejos extends Component {
                       encontrado: true
                     });
                   } else{
-                    this.setState({
-                      ruta: `/consejos/${this.state.consecutivo}`,
-                      encontrado: true
-                    });
+                    if(Date.parse(res.data.council.fecha) >= Date.now()){
+                      this.setState({
+                        ruta: `/proximosconsejos/${this.state.consecutivo}`,
+                        encontrado: true
+                      });
+                    } else{
+                      this.setState({
+                        ruta: `/consejos/${this.state.consecutivo}`,
+                        encontrado: true
+                      });
+                    }
                   }
                 } else {
                   let consecutivo = this.state.consecutivo;
