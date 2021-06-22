@@ -108,7 +108,7 @@ export default class VisualizarConsejosUsuario extends Component {
               <div className='d-flex justify-content-between align-items-center'>
                 <p className="card-title m-0">{consejo.consecutivo}</p>
                 <div className='d-flex justify-content-between align-items-center'>
-                  <Link to={`/gConsejos/${consejo.consecutivo}`}><i className="far fa-eye fa-lg ml-2" style={{ color: "navy" }}></i></Link>
+                  <Link to={`/consejos/${consejo.consecutivo}`}><i className="far fa-eye fa-lg ml-2" style={{ color: "navy" }}></i></Link>
                 </div>
               </div>
               <p className='m-0'>{consejo.institucion}</p>
