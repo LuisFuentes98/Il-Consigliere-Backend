@@ -1,0 +1,1 @@
+Esta es una carpeta dedicada a la generación de actas del sistema.
